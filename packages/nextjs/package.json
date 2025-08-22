@@ -24,6 +24,7 @@
     "@uniswap/sdk-core": "~5.8.2",
     "@uniswap/v2-sdk": "~4.6.1",
     "@upstash/redis": "^1.35.3",
+    "axios": "^1.11.0",
     "blo": "~1.2.0",
     "burner-connector": "0.0.16",
     "daisyui": "5.0.9",
