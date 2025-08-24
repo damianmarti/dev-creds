@@ -9,10 +9,9 @@ const authOptions = {
       profile(profile) {
         return {
           id: String(profile.id),
-          name: profile.name,
+          name: profile.login,
           email: profile.email,
           image: profile.avatar_url,
-          username: profile.login,
         };
       },
     }),
@@ -21,17 +20,10 @@ const authOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, profile }) {
-      if (profile) {
-        token.username = (profile as any).login;
-      }
+    async jwt({ token }) {
       return token;
     },
-    async session({ session, token }) {
-      if (session.user) {
-        (session.user as any).username = token.username as string | undefined;
-        (session.user as any).id = token.id as string | undefined;
-      }
+    async session({ session }) {
       return session;
     },
     async redirect({ url, baseUrl }) {

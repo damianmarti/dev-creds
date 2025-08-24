@@ -5,9 +5,9 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const address = searchParams.get("address")?.toLowerCase();
 
-  const username = await redis.get<string>(`github:byAddress:${address}`);
+  const username = await redis.get(`github:byAddress:${address}`);
   if (!username) {
-    return NextResponse.json({ error: "This Ethereum address is not linked to github account" }, { status: 400 });
+    return NextResponse.json({ error: "This Ethereum address is not linked to github account" }, { status: 404 });
   }
 
   return NextResponse.json({ username });
@@ -20,7 +20,7 @@ export async function POST(req: Request) {
   }
 
   // Check if the username is already linked to another address
-  const existingAddress = await redis.get<string>(`github:byUsername:${username}`);
+  const existingAddress = await redis.get(`github:byUsername:${username}`);
   if (existingAddress && existingAddress.toLowerCase() !== address.toLowerCase()) {
     return NextResponse.json(
       { error: "This GitHub username is already linked to another Ethereum address" },
