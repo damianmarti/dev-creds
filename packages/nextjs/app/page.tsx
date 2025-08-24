@@ -1,7 +1,6 @@
 "use client";
 
 import type { NextPage } from "next";
-import { signOut } from "next-auth/react";
 import { Attest } from "~~/components/attestation/Attest";
 
 const Home: NextPage = () => {
@@ -14,14 +13,6 @@ const Home: NextPage = () => {
             <span className="block text-4xl font-bold">DevCreds</span>
           </h1>
         </div>
-        <button
-          onClick={() => {
-            signOut();
-          }}
-        >
-          {" "}
-          Sign out
-        </button>
         <Attest />
       </div>
     </>

@@ -3,7 +3,7 @@ import { queryClient } from "./ScaffoldEthAppWithProviders";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Address } from "abitype";
 import axios from "axios";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { notification } from "~~/utils/scaffold-eth";
 
 type GitHubResponse = { username: string };
@@ -63,9 +63,11 @@ export const LinkGithub = ({ address }: LinkGitHubProps) => {
       queryClient.invalidateQueries({ queryKey: ["githubUsername", address] });
       notification.success("GitHub linked");
     },
-    onError: (e: unknown) => {
+    onError: async (e: unknown) => {
       const msg = e instanceof Error ? e.message : "Link failed";
       notification.error(msg);
+      // Sign out the user to let them try again - with another github
+      await signOut();
     },
   });
 
