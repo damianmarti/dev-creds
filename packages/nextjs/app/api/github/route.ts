@@ -27,8 +27,9 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   }
-
+  // Link the username to the address so that only 1-1 mapping is possible
   await redis.set(`github:byAddress:${address.toLowerCase()}`, username);
+  await redis.set(`github:byUsername:${username}`, address.toLowerCase());
 
   return NextResponse.json({ message: "GitHub account linked successfully" });
 }
