@@ -4,12 +4,12 @@ import GithubProvider from "next-auth/providers/github";
 const authOptions = {
   providers: [
     GithubProvider({
-      clientId: process.env.GITHUB_ID as string,
-      clientSecret: process.env.GITHUB_SECRET as string,
+      clientId: process.env.GITHUB_ID!,
+      clientSecret: process.env.GITHUB_SECRET!,
       profile(profile) {
         return {
           id: String(profile.id),
-          name: profile.login,
+          name: profile.login, // use login(username) as name
           email: profile.email,
           image: profile.avatar_url,
         };
@@ -18,17 +18,6 @@ const authOptions = {
   ],
   session: {
     strategy: "jwt",
-  },
-  callbacks: {
-    async jwt({ token }) {
-      return token;
-    },
-    async session({ session }) {
-      return session;
-    },
-    async redirect({ url, baseUrl }) {
-      return url.startsWith(baseUrl) ? url : `${baseUrl}/protected/client`;
-    },
   },
   secret: process.env.NEXTAUTH_SECRET,
 } satisfies NextAuthOptions;
