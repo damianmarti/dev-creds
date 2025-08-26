@@ -19,14 +19,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Missing address or username" }, { status: 400 });
   }
   const lowerCaseAddress = address.toLowerCase();
+
   // Check if the username is already linked to another address
   const existingAddress = await redis.get(`github:byUsername:${username}`);
-  if (existingAddress && existingAddress.toLowerCase() !== address.toLowerCase()) {
-    return NextResponse.json(
-      { error: "This GitHub username is already linked to another Ethereum address" },
-      { status: 400 },
-    );
+  if (existingAddress && existingAddress !== lowerCaseAddress) {
+    await redis.del(`github:byAddress:${existingAddress}`);
+    await redis.del(`github:byUsername:${username}`);
   }
+
   // Link the username to the address so that only 1-1 mapping is possible
   await redis.set(`github:byAddress:${lowerCaseAddress}`, username);
   await redis.set(`github:byUsername:${username}`, lowerCaseAddress);
