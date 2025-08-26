@@ -13,7 +13,6 @@ const Home: NextPage = () => {
             <span className="block text-4xl font-bold">DevCreds</span>
           </h1>
         </div>
-
         <Attest />
       </div>
     </>
