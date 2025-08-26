@@ -18,7 +18,7 @@ export async function POST(req: Request) {
   if (!address || !username) {
     return NextResponse.json({ error: "Missing address or username" }, { status: 400 });
   }
-
+  const lowerCaseAddress = address.toLowerCase();
   // Check if the username is already linked to another address
   const existingAddress = await redis.get(`github:byUsername:${username}`);
   if (existingAddress && existingAddress.toLowerCase() !== address.toLowerCase()) {
@@ -28,8 +28,8 @@ export async function POST(req: Request) {
     );
   }
   // Link the username to the address so that only 1-1 mapping is possible
-  await redis.set(`github:byAddress:${address.toLowerCase()}`, username);
-  await redis.set(`github:byUsername:${username}`, address.toLowerCase());
+  await redis.set(`github:byAddress:${lowerCaseAddress}`, username);
+  await redis.set(`github:byUsername:${username}`, lowerCaseAddress);
 
   return NextResponse.json({ message: "GitHub account linked successfully" });
 }
