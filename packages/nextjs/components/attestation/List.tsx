@@ -4,9 +4,6 @@ import { gql, request } from "graphql-request";
 import { Address } from "~~/components/scaffold-eth";
 import scaffoldConfig from "~~/scaffold.config";
 
-// const graphUri = "https://optimism.easscan.org/graphql";
-const graphUri = "https://optimism-sepolia.easscan.org/graphql";
-
 type Attestation = {
   id: string;
   attester: string;
@@ -15,11 +12,11 @@ type Attestation = {
 };
 type AttestationsData = { attestations: Attestation[] };
 
-const fetchAttestations = async () => {
+const fetchAttestations = async (graphUri: string, schemaUID: string) => {
   const AttestationsQuery = gql`
     query Attestations {
       attestations(
-        where: { schemaId: { equals: "0x5fe4eaf3dd73bc3c6929505faacc81ba5cfd50566b6bc34617ae069a5415dbf9" } }
+        where: { schemaId: { equals: "${schemaUID}" } }
       ) {
         attester
         data
@@ -33,15 +30,35 @@ const fetchAttestations = async () => {
 };
 
 export const List = () => {
-  const schemaEncoder = new SchemaEncoder("string github_user,string[] skills,string description,string evidence");
+  const targetNetwork = scaffoldConfig.targetNetworks[0];
+  const easConfig = scaffoldConfig.easConfig[targetNetwork.id];
+
+  const schemaEncoder = new SchemaEncoder("string github_user,string[] skills,string description,string[] evidences");
 
   const { data: attestationsData, isLoading } = useQuery({
-    queryKey: ["attestations"],
-    queryFn: fetchAttestations,
+    queryKey: ["attestations", targetNetwork.id],
+    queryFn: () => {
+      if (!easConfig) {
+        throw new Error("EAS configuration not found for this chain");
+      }
+      return fetchAttestations(easConfig.graphUri, easConfig.schemaUID);
+    },
     refetchInterval: scaffoldConfig.pollingInterval,
+    enabled: !!easConfig,
   });
 
-  console.log("attestationsData: ", attestationsData);
+  if (!easConfig) {
+    return (
+      <div className="list__container flex flex-col justify-center items-center bg-[url('/assets/gradient-bg.png')] bg-[length:100%_100%] py-10 px-5 sm:px-0 lg:py-auto max-w-[100vw]">
+        <div className="alert alert-warning">
+          <div>
+            <h3 className="font-bold">EAS Not Configured</h3>
+            <div className="text-xs">EAS is not configured for this network. Please switch to a supported network.</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="list__container flex flex-col justify-center items-center bg-[url('/assets/gradient-bg.png')] bg-[length:100%_100%] py-10 px-5 sm:px-0 lg:py-auto max-w-[100vw] ">
@@ -75,7 +92,7 @@ export const List = () => {
                   <tr key={attestation.id} className="hover text-sm">
                     <td className="w-1/4 p-1 sml:p-4">
                       <a
-                        href={`https://optimism-sepolia.easscan.org/attestation/view/${attestation.id}`}
+                        href={`${easConfig?.scan}/attestation/view/${attestation.id}`}
                         title={attestation.id}
                         target="_blank"
                         rel="noreferrer"
@@ -90,7 +107,19 @@ export const List = () => {
                     <td className="w-1/4 p-1 sml:p-4">
                       {schemaEncoder.decodeData(attestation.data)[0].value.value.toString()}
                     </td>
-                    <td>{schemaEncoder.decodeData(attestation.data)[1].value.value.toString()}</td>
+                    <td className="w-1/4 p-1 sml:p-4">
+                      <div className="flex flex-wrap gap-1">
+                        {schemaEncoder
+                          .decodeData(attestation.data)[1]
+                          .value.value.toString()
+                          .split(",")
+                          .map((skill: string, index: number) => (
+                            <span key={index} className="badge badge-primary badge-sm">
+                              {skill.trim()}
+                            </span>
+                          ))}
+                      </div>
+                    </td>
                     <td className="text-right list__container--last_row-data p-1 sml:p-4">
                       {new Date(attestation.timeCreated * 1000).toLocaleString()}
                     </td>
