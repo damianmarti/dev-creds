@@ -49,8 +49,10 @@ ponder.on("EAS:Attested", async ({ event, context }) => {
                 await context.db.insert(developerSkill).values({
                     githubUser: githubUser,
                     skill: skill,
+                    count: 1,
                     score: 1,
                 }).onConflictDoUpdate((row) => ({
+                    count: row.count + 1,
                     score: row.score + 1
                   }));
             });

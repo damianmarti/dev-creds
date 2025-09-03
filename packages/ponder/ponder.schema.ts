@@ -23,6 +23,7 @@ export const developerSkill = onchainTable(
   (t) => ({
     githubUser: t.text().notNull(),
     skill: t.text().notNull(),
+    count: t.integer().notNull(),
     score: t.integer().notNull(),
   }),
   (t) => ({
