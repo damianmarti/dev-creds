@@ -1,4 +1,4 @@
-import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { gql, request } from "graphql-request";
 import { Address } from "~~/components/scaffold-eth";
@@ -7,58 +7,91 @@ import scaffoldConfig from "~~/scaffold.config";
 type Attestation = {
   id: string;
   attester: string;
-  data: string;
-  timeCreated: number;
+  uid: string;
+  githubUser: string;
+  skills: string[];
+  description: string;
+  evidences: string[];
+  timestamp: number;
 };
-type AttestationsData = { attestations: Attestation[] };
+type AttestationsData = {
+  attestations: {
+    items: Attestation[];
+    pageInfo: {
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+      startCursor: string | null;
+      endCursor: string | null;
+    };
+  };
+};
 
-const fetchAttestations = async (graphUri: string, schemaUID: string) => {
+const PONDER_GRAPHQL_URL = "http://localhost:42069"; // Ponder GraphQL endpoint
+
+const fetchAttestations = async (pageSize: number = 20, cursor?: string) => {
   const AttestationsQuery = gql`
-    query Attestations {
-      attestations(
-        where: { schemaId: { equals: "${schemaUID}" } }
-      ) {
-        attester
-        data
-        timeCreated
-        id
+    query Attestations($limit: Int!, $after: String) {
+      attestations(limit: $limit, after: $after, orderBy: "timestamp", orderDirection: "desc") {
+        items {
+          id
+          attester
+          uid
+          githubUser
+          skills
+          description
+          evidences
+          timestamp
+        }
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
+        }
       }
     }
   `;
-  const data = await request<AttestationsData>(graphUri, AttestationsQuery);
+
+  const variables: any = {
+    limit: pageSize,
+  };
+
+  if (cursor) {
+    variables.after = cursor;
+  }
+
+  const data = await request<AttestationsData>(PONDER_GRAPHQL_URL, AttestationsQuery, variables);
   return data;
 };
 
 export const List = () => {
-  const targetNetwork = scaffoldConfig.targetNetworks[0];
-  const easConfig = scaffoldConfig.easConfig[targetNetwork.id];
-
-  const schemaEncoder = new SchemaEncoder("string github_user,string[] skills,string description,string[] evidences");
+  const [cursor, setCursor] = useState<string | undefined>(undefined);
+  const [cursors, setCursors] = useState<string[]>([]);
+  const pageSize = 20;
 
   const { data: attestationsData, isLoading } = useQuery({
-    queryKey: ["attestations", targetNetwork.id],
-    queryFn: () => {
-      if (!easConfig) {
-        throw new Error("EAS configuration not found for this chain");
-      }
-      return fetchAttestations(easConfig.graphUri, easConfig.schemaUID);
-    },
+    queryKey: ["attestations", cursor],
+    queryFn: () => fetchAttestations(pageSize, cursor),
     refetchInterval: scaffoldConfig.pollingInterval,
-    enabled: !!easConfig,
   });
 
-  if (!easConfig) {
-    return (
-      <div className="list__container flex flex-col justify-center items-center bg-[url('/assets/gradient-bg.png')] bg-[length:100%_100%] py-10 px-5 sm:px-0 lg:py-auto max-w-[100vw]">
-        <div className="alert alert-warning">
-          <div>
-            <h3 className="font-bold">EAS Not Configured</h3>
-            <div className="text-xs">EAS is not configured for this network. Please switch to a supported network.</div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const goNext = () => {
+    if (attestationsData?.attestations.pageInfo.hasNextPage) {
+      const newCursor = attestationsData.attestations.pageInfo.endCursor;
+      if (newCursor) {
+        setCursors(prev => [...prev, cursor || ""]);
+        setCursor(newCursor);
+      }
+    }
+  };
+
+  const goPrevious = () => {
+    if (cursors.length > 0) {
+      const previousCursor = cursors[cursors.length - 1];
+      setCursors(prev => prev.slice(0, -1));
+      setCursor(previousCursor || undefined);
+    }
+  };
 
   return (
     <div className="list__container flex flex-col justify-center items-center bg-[url('/assets/gradient-bg.png')] bg-[length:100%_100%] py-10 px-5 sm:px-0 lg:py-auto max-w-[100vw] ">
@@ -87,41 +120,46 @@ export const List = () => {
             </tbody>
           ) : (
             <tbody>
-              {attestationsData?.attestations.map(attestation => {
+              {attestationsData?.attestations.items.map(attestation => {
                 return (
                   <tr key={attestation.id} className="hover text-sm">
                     <td className="w-1/4 p-1 sml:p-4">
-                      <a
-                        href={`${easConfig?.scan}/attestation/view/${attestation.id}`}
-                        title={attestation.id}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex"
-                      >
-                        <span className="list__container--first_row-data">{attestation.id.slice(0, 20)}</span>...
-                      </a>
+                      <span title={attestation.uid} className="flex">
+                        <span className="list__container--first_row-data">{attestation.uid.slice(0, 20)}</span>...
+                      </span>
                     </td>
                     <td className="w-1/4 p-1 sml:p-4">
                       <Address address={attestation.attester} size="sm" />
                     </td>
                     <td className="w-1/4 p-1 sml:p-4">
-                      {schemaEncoder.decodeData(attestation.data)[0].value.value.toString()}
+                      <div className="flex flex-col gap-1">
+                        <a
+                          href={`https://github.com/${attestation.githubUser}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-primary hover:underline"
+                        >
+                          @{attestation.githubUser}
+                        </a>
+                        <a
+                          href={`/attestations/${attestation.githubUser}`}
+                          className="text-xs text-secondary hover:underline"
+                        >
+                          View all attestations
+                        </a>
+                      </div>
                     </td>
                     <td className="w-1/4 p-1 sml:p-4">
                       <div className="flex flex-wrap gap-1">
-                        {schemaEncoder
-                          .decodeData(attestation.data)[1]
-                          .value.value.toString()
-                          .split(",")
-                          .map((skill: string, index: number) => (
-                            <span key={index} className="badge badge-primary badge-sm">
-                              {skill.trim()}
-                            </span>
-                          ))}
+                        {attestation.skills.map((skill: string, index: number) => (
+                          <span key={index} className="badge badge-primary badge-sm">
+                            {skill.trim()}
+                          </span>
+                        ))}
                       </div>
                     </td>
                     <td className="text-right list__container--last_row-data p-1 sml:p-4">
-                      {new Date(attestation.timeCreated * 1000).toLocaleString()}
+                      {new Date(attestation.timestamp * 1000).toLocaleString()}
                     </td>
                   </tr>
                 );
@@ -130,6 +168,23 @@ export const List = () => {
           )}
         </table>
       </div>
+
+      {/* Pagination Controls */}
+      {attestationsData && (
+        <div className="flex justify-center items-center mt-6 gap-4">
+          <button onClick={goPrevious} disabled={cursors.length === 0} className="btn btn-outline">
+            Previous
+          </button>
+          <span className="text-lg font-medium">Page {cursors.length + 1}</span>
+          <button
+            onClick={goNext}
+            disabled={!attestationsData.attestations.pageInfo.hasNextPage}
+            className="btn btn-outline"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };
