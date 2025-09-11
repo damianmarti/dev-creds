@@ -114,6 +114,9 @@ type Props = {
 };
 
 export const UserAttestations = ({ githubUser }: Props) => {
+  const targetNetwork = scaffoldConfig.targetNetworks[0];
+  const easConfig = scaffoldConfig.easConfig[targetNetwork.id];
+
   const [cursor, setCursor] = useState<string | undefined>(undefined);
   const [cursors, setCursors] = useState<string[]>([]);
   const pageSize = 10;
@@ -258,7 +261,18 @@ export const UserAttestations = ({ githubUser }: Props) => {
                       {new Date(attestation.timestamp * 1000).toLocaleDateString()}
                     </p>
                   </div>
-                  <div className="text-xs text-base-content/50">UID: {attestation.uid.slice(0, 16)}...</div>
+                  <div className="text-xs text-base-content/50">
+                    UID:{" "}
+                    <a
+                      href={`${easConfig?.scan}/attestation/view/${attestation.uid}`}
+                      title={attestation.uid}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline"
+                    >
+                      <span className="list__container--first_row-data">{attestation.uid.slice(0, 20)}</span>...
+                    </a>
+                  </div>
                 </div>
 
                 {/* Skills attested in this specific attestation */}

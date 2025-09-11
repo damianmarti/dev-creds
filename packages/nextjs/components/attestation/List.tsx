@@ -65,6 +65,9 @@ const fetchAttestations = async (pageSize: number = 20, cursor?: string) => {
 };
 
 export const List = () => {
+  const targetNetwork = scaffoldConfig.targetNetworks[0];
+  const easConfig = scaffoldConfig.easConfig[targetNetwork.id];
+
   const [cursor, setCursor] = useState<string | undefined>(undefined);
   const [cursors, setCursors] = useState<string[]>([]);
   const pageSize = 20;
@@ -124,9 +127,15 @@ export const List = () => {
                 return (
                   <tr key={attestation.id} className="hover text-sm">
                     <td className="w-1/4 p-1 sml:p-4">
-                      <span title={attestation.uid} className="flex">
+                      <a
+                        href={`${easConfig?.scan}/attestation/view/${attestation.uid}`}
+                        title={attestation.uid}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex"
+                      >
                         <span className="list__container--first_row-data">{attestation.uid.slice(0, 20)}</span>...
-                      </span>
+                      </a>
                     </td>
                     <td className="w-1/4 p-1 sml:p-4">
                       <Address address={attestation.attester} size="sm" />
