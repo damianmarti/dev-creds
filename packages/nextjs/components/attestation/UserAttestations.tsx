@@ -205,18 +205,9 @@ export const UserAttestations = ({ githubUser }: Props) => {
               .sort((a, b) => b.score - a.score)
               .map((skillData, index) => (
                 <div key={index} className="bg-base-100 rounded-lg p-4 shadow">
-                  <div className="flex justify-between items-center mb-2">
+                  <div className="flex justify-between items-center">
                     <h3 className="font-semibold text-lg">{skillData.skill}</h3>
                     <div className="badge badge-primary">{skillData.score}</div>
-                  </div>
-                  <div className="text-sm text-base-content/70">{skillData.count} attestation(s)</div>
-                  <div className="w-full bg-base-300 rounded-full h-2 mt-2">
-                    <div
-                      className="bg-primary h-2 rounded-full"
-                      style={{
-                        width: `${Math.min((skillData.score / Math.max(...skillsData.developerSkills.items.map(s => s.score))) * 100, 100)}%`,
-                      }}
-                    ></div>
                   </div>
                 </div>
               ))}
