@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { gql, request } from "graphql-request";
 
-const GRAPHQL_ENDPOINT = process.env.NEXT_PUBLIC_GRAPHQL || "http://localhost:42069/graphql";
+const PONDER_GRAPHQL_URL = process.env.NEXT_PUBLIC_PONDER_URL || "http://localhost:42069";
 
 interface StatsResponse {
   attestations: {
@@ -26,7 +26,7 @@ const STATS_QUERY = gql`
 export const DisplayStats = () => {
   const { data: statsData, isLoading: statsLoading } = useQuery<StatsResponse>({
     queryKey: ["stats-count"],
-    queryFn: () => request(GRAPHQL_ENDPOINT, STATS_QUERY),
+    queryFn: () => request(PONDER_GRAPHQL_URL, STATS_QUERY),
     refetchInterval: 30000, // Refetch every 30 seconds
   });
 
