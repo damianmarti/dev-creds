@@ -10,6 +10,9 @@ interface StatsResponse {
   developers: {
     totalCount: number;
   };
+  developerSkills: {
+    totalCount: number;
+  };
 }
 
 const STATS_QUERY = gql`
@@ -18,6 +21,9 @@ const STATS_QUERY = gql`
       totalCount
     }
     developers {
+      totalCount
+    }
+    developerSkills {
       totalCount
     }
   }
@@ -32,6 +38,7 @@ export const DisplayStats = () => {
 
   const attestationsCount = statsData?.attestations?.totalCount || 0;
   const developersCount = statsData?.developers?.totalCount || 0;
+  const developerSkillsCount = statsData?.developerSkills?.totalCount || 0;
 
   return (
     <div className="mt-10 bg-base-100 stats stats-vertical md:stats-horizontal shadow">
@@ -51,14 +58,20 @@ export const DisplayStats = () => {
           {statsLoading ? (
             <span className="loading loading-spinner loading-sm"></span>
           ) : (
-            attestationsCount.toLocaleString()
+            developerSkillsCount.toLocaleString()
           )}
         </div>
         <div className="stat-desc">Attestations</div>
       </div>
 
       <div className="stat text-center">
-        <div className="stat-value text-tertiary font-serif">1,204</div>
+        <div className="stat-value text-tertiary font-serif">
+          {statsLoading ? (
+            <span className="loading loading-spinner loading-sm"></span>
+          ) : (
+            attestationsCount.toLocaleString()
+          )}
+        </div>
         <div className="stat-desc">Verified Collaborations</div>
       </div>
     </div>
