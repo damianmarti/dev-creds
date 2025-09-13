@@ -58,7 +58,7 @@ interface Profile {
 const profile: Profile = {
   name: "Vitalik Buterin",
   username: "vitalik",
-  avatar: "/vitalik-buterin-avatar.png",
+  avatar: "",
   bio: "Ethereum co-founder, researcher, and developer. Building the future of decentralized systems.",
   githubUrl: "https://github.com/vbuterin",
   walletAddress: "0x1234...5678",
