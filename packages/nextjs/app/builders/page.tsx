@@ -1,3 +1,4 @@
+import { BuildersFilter } from "~~/components/BuildersFilter";
 import { BuildersTable } from "~~/components/BuildersTable";
 
 export default function Builders() {
@@ -9,6 +10,7 @@ export default function Builders() {
           <p className="text-base-content/70">Top developers ranked by verified skills and peer attestations</p>
         </div>
       </div>
+      <BuildersFilter />
       <BuildersTable />
     </div>
   );
