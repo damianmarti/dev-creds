@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { ReusuableStats } from "./DisplayStats";
+import { GithubSVG } from "./GithubSVG";
 import {
   ArrowTopRightOnSquareIcon,
   ChatBubbleLeftRightIcon,
   CheckCircleIcon,
-  CodeBracketSquareIcon,
   ShareIcon,
 } from "@heroicons/react/24/outline";
 
@@ -165,7 +165,7 @@ function ProfileHeader({ profile }: { profile: Profile }) {
                 rel="noopener noreferrer"
                 className="btn btn-outline btn-sm flex items-center gap-2"
               >
-                <CodeBracketSquareIcon className="h-4 w-4" />
+                <GithubSVG />
                 GitHub
               </Link>
               <button className="btn btn-primary btn-sm flex items-center gap-2">
