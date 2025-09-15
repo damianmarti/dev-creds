@@ -23,7 +23,7 @@ ponder.on("EAS:Attested", async ({ event, context }) => {
 
         if (decodedData && decodedData[0] && decodedData[1] && decodedData[2] && decodedData[3]) {
 
-            const githubUser = decodedData[0].value.value.toString();
+            const githubUser = decodedData[0].value.value.toString().toLowerCase();
             const skills = decodedData[1].value.value.toString().split(',');
             const description = decodedData[2].value.value.toString();
             const evidences = decodedData[3].value.value.toString().split(',');
@@ -41,7 +41,7 @@ ponder.on("EAS:Attested", async ({ event, context }) => {
             });
 
             await context.db.insert(developer).values({
-                githubUser: decodedData[0].value.value.toString(),
+                githubUser: githubUser,
             }).onConflictDoNothing();
 
             skills.forEach(async (skill) => {
