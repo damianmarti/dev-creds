@@ -1,12 +1,7 @@
 import Link from "next/link";
 import { ReusuableStats } from "./DisplayStats";
 import { GithubSVG } from "./GithubSVG";
-import {
-  ArrowTopRightOnSquareIcon,
-  ChatBubbleLeftRightIcon,
-  CheckCircleIcon,
-  ShareIcon,
-} from "@heroicons/react/24/outline";
+import { ChatBubbleLeftRightIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 
 interface BuilderProfileProps {
   username: string;
@@ -14,9 +9,8 @@ interface BuilderProfileProps {
 
 interface Skill {
   name: string;
-  level: string;
   attestations: number;
-  verified: boolean;
+  verified: number;
 }
 
 interface Attestation {
@@ -25,17 +19,9 @@ interface Attestation {
   fromName: string;
   skill: string;
   comment: string;
-  evidence?: string;
+  evidence?: string[];
   date: string;
-  isCollaborator: boolean;
-  sharedRepos: number;
-}
-
-interface Repository {
-  name: string;
-  description: string;
-  stars: string;
-  url: string;
+  verified?: boolean;
 }
 
 interface Profile {
@@ -48,11 +34,9 @@ interface Profile {
   joinDate: string;
   credScore: number;
   attestations: number;
-  collaborators: number;
+  verifiedAttestations: number;
   skills: Skill[];
   recentAttestations: Attestation[];
-  notableRepos: Repository[];
-  topCollaborators: string[];
 }
 
 const profile: Profile = {
@@ -65,14 +49,14 @@ const profile: Profile = {
   joinDate: "2023-01-15",
   credScore: 2847,
   attestations: 156,
-  collaborators: 89,
+  verifiedAttestations: 14,
   skills: [
-    { name: "Solidity", level: "Expert", attestations: 45, verified: true },
-    { name: "Python", level: "Advanced", attestations: 32, verified: true },
-    { name: "Cryptography", level: "Expert", attestations: 28, verified: true },
-    { name: "Smart Contracts", level: "Expert", attestations: 52, verified: true },
-    { name: "Protocol Design", level: "Expert", attestations: 38, verified: true },
-    { name: "Research", level: "Expert", attestations: 41, verified: true },
+    { name: "Solidity", attestations: 45, verified: 12 },
+    { name: "Python", attestations: 32, verified: 10 },
+    { name: "Cryptography", attestations: 28, verified: 8 },
+    { name: "Smart Contracts", attestations: 52, verified: 14 },
+    { name: "Protocol Design", attestations: 38, verified: 14 },
+    { name: "Research", attestations: 41, verified: 29 },
   ],
   recentAttestations: [
     {
@@ -82,10 +66,8 @@ const profile: Profile = {
       skill: "Protocol Design",
       comment:
         "Vitalik's work on EIP-1559 was groundbreaking. His deep understanding of mechanism design and ability to balance technical complexity with practical implementation is unmatched.",
-      evidence: "https://github.com/ethereum/EIPs/pull/2593",
+      evidence: ["https://github.com/ethereum/EIPs/pull/2593"],
       date: "2024-01-10",
-      isCollaborator: true,
-      sharedRepos: 3,
     },
     {
       id: 2,
@@ -94,10 +76,8 @@ const profile: Profile = {
       skill: "Smart Contracts",
       comment:
         "Worked with Vitalik on several Ethereum improvement proposals. His ability to think through edge cases and security implications is exceptional.",
-      evidence: "https://github.com/ethereum/EIPs/pull/2718",
+      evidence: ["https://github.com/ethereum/EIPs/pull/2718"],
       date: "2024-01-08",
-      isCollaborator: true,
-      sharedRepos: 2,
     },
     {
       id: 3,
@@ -106,39 +86,10 @@ const profile: Profile = {
       skill: "Solidity",
       comment:
         "Vitalik's Solidity code is clean, well-documented, and follows best practices. Great mentor for junior developers.",
-      evidence: "https://github.com/ethereum/solidity-examples",
+      evidence: ["https://github.com/ethereum/solidity-examples"],
       date: "2024-01-05",
-      isCollaborator: false,
-      sharedRepos: 0,
     },
   ],
-  notableRepos: [
-    {
-      name: "ethereum/EIPs",
-      description: "Ethereum Improvement Proposals",
-      stars: "15.2k",
-      url: "https://github.com/ethereum/EIPs",
-    },
-    {
-      name: "ethereum/py-evm",
-      description: "Python implementation of EVM",
-      stars: "2.1k",
-      url: "https://github.com/ethereum/py-evm",
-    },
-    {
-      name: "ethereum/research",
-      description: "Ethereum research repository",
-      stars: "1.8k",
-      url: "https://github.com/ethereum/research",
-    },
-    {
-      name: "ethereum/consensus-specs",
-      description: "Ethereum consensus specifications",
-      stars: "3.4k",
-      url: "https://github.com/ethereum/consensus-specs",
-    },
-  ],
-  topCollaborators: ["gakonst", "danfinlay", "austingriffith", "haydenadams"],
 };
 
 function ProfileHeader({ profile }: { profile: Profile }) {
@@ -194,7 +145,7 @@ function StatsGrid({ profile }: { profile: Profile }) {
   const stats = [
     { label: "Cred Score", value: profile.credScore },
     { label: "Attestations", value: profile.attestations },
-    { label: "Collaborators", value: profile.collaborators },
+    { label: "Verified Attestations", value: profile.verifiedAttestations },
   ];
   return <ReusuableStats stats={stats} />;
 }
@@ -221,11 +172,10 @@ function SkillCard({ skill }: { skill: Skill }) {
       <div>
         <div className="flex items-center gap-2">
           <span className="font-medium text-base-content text-sm sm:text-base">{skill.name}</span>
-          {skill.verified && <CheckCircleIcon className="h-4 w-4 text-green-500" />}
         </div>
-        <div className="mt-1 flex items-center gap-2">
-          <div className="badge badge-secondary badge-sm">{skill.level}</div>
-          <span className="text-xs text-base-content/70">{skill.attestations} attestations</span>
+        <div className="flex items-center gap-2 text-xs text-base-content/70">
+          <span className="badge badge-success badge-sm">{skill.verified} verified</span>
+          Total {skill.attestations} attestations
         </div>
       </div>
     </div>
@@ -266,10 +216,10 @@ function AttestationCard({ attestation }: { attestation: Attestation }) {
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
               <span className="font-medium text-base-content">{attestation.fromName}</span>
-              {attestation.isCollaborator && (
-                <div className="badge badge-outline badge-primary badge-sm">
-                  <ShareIcon className="mr-1 h-3 w-3" />
-                  Collaborator
+              {attestation.verified && (
+                <div className="badge badge-outline badge-success badge-sm">
+                  <CheckCircleIcon className="mr-1 h-3 w-3" />
+                  Verified
                 </div>
               )}
             </div>
@@ -278,24 +228,23 @@ function AttestationCard({ attestation }: { attestation: Attestation }) {
             </div>
           </div>
         </div>
-        {/* TODO: Replace with actual date */}
         <span className="text-xs sm:text-sm text-base-content/70">10 Jan 2025</span>
       </div>
 
       <div className="space-y-2">
         <div className="badge badge-secondary badge-sm">{attestation.skill}</div>
         <p className="text-base-content text-sm sm:text-base">{attestation.comment}</p>
-        {attestation.evidence && (
+        {attestation?.evidence?.map((url, i) => (
           <Link
+            key={i}
             target="_blank"
-            href={attestation.evidence}
+            href={url}
             rel="noopener noreferrer"
-            className="text-xs sm:text-sm text-base-content/70 underline hover:text-primary inline-flex items-center gap-1"
+            className="block text-xs sm:text-sm text-base-content/70 underline hover:text-primary"
           >
-            <ArrowTopRightOnSquareIcon className="h-3 w-3" />
-            View Evidence
+            {url}
           </Link>
-        )}
+        ))}
       </div>
     </div>
   );

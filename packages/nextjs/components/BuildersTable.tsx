@@ -9,7 +9,7 @@ interface Developer {
   username: string;
   avatar?: string;
   githubUrl?: string;
-  attestations: { positive: number; total: number };
+  attestations: { total: number; verified?: number };
   monthlyAttestations: number;
   topCollaborators: string[];
   skills: string[];
@@ -21,50 +21,50 @@ const mockDevelopers: Developer[] = [
     username: "vbuterin",
     avatar: "",
     githubUrl: "https://github.com/vbuterin",
-    attestations: { positive: 98.2, total: 156 },
+    attestations: { total: 156, verified: 47 },
     monthlyAttestations: 15,
     topCollaborators: ["", "", "", ""],
-    skills: ["Solidity", "TypeScript", "Protocol Design"],
+    skills: ["Solidity", "TypeScript", "Foundry", "Ethers.js"],
   },
   {
     name: "Dan Abramov",
     username: "gaearon",
     avatar: "",
     githubUrl: "https://github.com/gaearon",
-    attestations: { positive: 96.8, total: 124 },
+    attestations: { total: 124, verified: 35 },
     monthlyAttestations: 12,
     topCollaborators: ["", "", ""],
-    skills: ["React", "JavaScript", "Developer Tools"],
+    skills: ["React", "Next.js", "TypeScript", "Node.js"],
   },
   {
     name: "Hayden Adams",
     username: "haydenzadams",
     avatar: "",
     githubUrl: "https://github.com/haydenzadams",
-    attestations: { positive: 97.5, total: 98 },
+    attestations: { total: 98, verified: 29 },
     monthlyAttestations: 11,
     topCollaborators: ["", ""],
-    skills: ["DeFi", "Smart Contracts", "AMM Design"],
+    skills: ["Solidity", "Hardhat", "Ethers.js", "The Graph"],
   },
   {
     name: "Austin Griffith",
     username: "austingriffith",
     avatar: "",
     githubUrl: "https://github.com/austingriffith",
-    attestations: { positive: 99.1, total: 87 },
+    attestations: { total: 87, verified: 31 },
     monthlyAttestations: 9,
     topCollaborators: ["", "", ""],
-    skills: ["Ethereum", "Education", "Tooling"],
+    skills: ["Solidity", "React", "Hardhat", "Ethers.js"],
   },
   {
     name: "Nader Dabit",
     username: "dabit3",
     avatar: "",
     githubUrl: "https://github.com/dabit3",
-    attestations: { positive: 95.6, total: 73 },
+    attestations: { total: 73, verified: 18 },
     monthlyAttestations: 7,
     topCollaborators: ["", ""],
-    skills: ["Full Stack", "GraphQL", "Web3"],
+    skills: ["React", "Next.js", "TypeScript", "The Graph"],
   },
 ];
 
@@ -91,6 +91,8 @@ function DeveloperRow({ developer }: { developer: Developer }) {
 
   const looksPlaceholder =
     !developer.avatar || developer.avatar.includes("placeholder") || developer.avatar.endsWith(".svg");
+
+  const attestationsLabel = `${developer.attestations.total} attestations (${developer.attestations.verified} verified)`;
 
   return (
     <div className="w-full p-4 transition-colors hover:bg-base-200/50 md:grid md:grid-cols-12 md:items-center md:gap-4 rounded-xl border border-base-200 md:rounded-none md:border-0">
@@ -146,10 +148,7 @@ function DeveloperRow({ developer }: { developer: Developer }) {
 
       {/* Attestations */}
       <div className="mt-3 md:mt-0 md:col-span-2">
-        <div className="font-medium text-base-content text-sm sm:text-base">
-          {developer.attestations.positive}% positive
-        </div>
-        <div className="text-sm text-base-content/70">({developer.attestations.total} attestations)</div>
+        <div className="font-medium text-base-content text-sm sm:text-base">{attestationsLabel}</div>
       </div>
 
       {/* Top collaborators */}
