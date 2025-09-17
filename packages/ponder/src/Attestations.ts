@@ -32,23 +32,23 @@ ponder.on("EAS:Attested", async ({ event, context }) => {
             const evidences = decodedData[3].value.value.toString().split(',').filter(e => e.trim());
             const attester = event.args.attester.toLowerCase();
 
-            const evidencesData: Record<string, { verified_count: number, colaborator_count: number }> = {};
+            const evidencesData: Record<string, { verified_count: number, collaborator_count: number }> = {};
 
             skills.forEach(async (skill) => {
                 evidencesData[skill.toLowerCase()] = {
                     verified_count: 0,
-                    colaborator_count: 0,
+                    collaborator_count: 0,
                 };
             });
 
             const evidencesVerified: boolean[] = [];
-            const evidencesColaborator: boolean[] = [];
+            const evidencesCollaborator: boolean[] = [];
 
             if (evidences.length > 0) {
                 const attesterUsername = await redis.get(`github:byAddress:${attester}`);
                 for (const evidence of evidences) {
                     let evidenceIsVerified = false;
-                    let evidenceIsColaborator = false;
+                    let evidenceIsCollaborator = false;
                     if (evidence.startsWith("https://github.com/")) {
                         try {
                              const user = evidence.split("/")[3];
@@ -63,7 +63,7 @@ ponder.on("EAS:Attested", async ({ event, context }) => {
                             if (data && Array.isArray(data) && data.length > 0) {
                                 const contributors = data.map((contributor: any) => contributor.login.toLowerCase());
                                 if (contributors.includes(githubUser)) {
-                                    const isColaborator = attesterUsername && contributors.some((contributor: string) => contributor === attesterUsername.toLowerCase());
+                                    const isCollaborator = attesterUsername && contributors.some((contributor: string) => contributor === attesterUsername.toLowerCase());
                                     const responseLanguages = await fetch(`https://api.github.com/repos/${user}/${repository}/languages`, { headers });
                                     const languagesData = await responseLanguages.json();
                                     const languages = Object.keys(languagesData as Record<string, any>);
@@ -72,9 +72,9 @@ ponder.on("EAS:Attested", async ({ event, context }) => {
                                         if (evidencesData[languageLower]) {
                                             evidenceIsVerified = true;
                                             evidencesData[languageLower].verified_count += 1;
-                                            if (isColaborator) {
-                                                evidenceIsColaborator = true;
-                                                evidencesData[languageLower].colaborator_count += 1;
+                                            if (isCollaborator) {
+                                                evidenceIsCollaborator = true;
+                                                evidencesData[languageLower].collaborator_count += 1;
                                             }
                                         }
                                     });
@@ -85,7 +85,7 @@ ponder.on("EAS:Attested", async ({ event, context }) => {
                         }
                     }
                     evidencesVerified.push(evidenceIsVerified);
-                    evidencesColaborator.push(evidenceIsColaborator);
+                    evidencesCollaborator.push(evidenceIsCollaborator);
                 }
             }
 
@@ -98,7 +98,7 @@ ponder.on("EAS:Attested", async ({ event, context }) => {
                 description: description,
                 evidences: evidences,
                 evidencesVerified: evidencesVerified,
-                evidencesColaborator: evidencesColaborator,
+                evidencesCollaborator: evidencesCollaborator,
                 timestamp: Number(event.block.timestamp),
             });
 
@@ -109,23 +109,23 @@ ponder.on("EAS:Attested", async ({ event, context }) => {
             skills.forEach(async (skill) => {
                 const evidenceData = evidencesData[skill.toLowerCase()];
                 let verifiedCount = 0;
-                let colaboratorCount = 0;
+                let collaboratorCount = 0;
                 if (evidenceData) {
                     verifiedCount = evidenceData.verified_count > 0 ? 1 : 0;
-                    colaboratorCount = evidenceData.colaborator_count > 0 ? 1 : 0;
+                    collaboratorCount = evidenceData.collaborator_count > 0 ? 1 : 0;
                 }
                 await context.db.insert(developerSkill).values({
                     githubUser: githubUser,
                     skill: skill,
                     count: 1,
                     verifiedCount: verifiedCount,
-                    colaboratorCount: colaboratorCount,
-                    score: 1 + verifiedCount + colaboratorCount,
+                    collaboratorCount: collaboratorCount,
+                    score: 1 + verifiedCount + collaboratorCount,
                 }).onConflictDoUpdate((row) => ({
                     count: row.count + 1,
                     verifiedCount: row.verifiedCount + verifiedCount,
-                    colaboratorCount: row.colaboratorCount + colaboratorCount,
-                    score: row.score + 1 + verifiedCount + colaboratorCount,
+                    collaboratorCount: row.collaboratorCount + collaboratorCount,
+                    score: row.score + 1 + verifiedCount + collaboratorCount,
                   }));
             });
         }

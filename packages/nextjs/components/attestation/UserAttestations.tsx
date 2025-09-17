@@ -14,7 +14,7 @@ type Attestation = {
   description: string;
   evidences: string[];
   evidencesVerified: boolean[];
-  evidencesColaborator: boolean[];
+  evidencesCollaborator: boolean[];
   timestamp: number;
 };
 
@@ -66,7 +66,7 @@ const fetchUserAttestations = async (
           description
           evidences
           evidencesVerified
-          evidencesColaborator
+          evidencesCollaborator
           timestamp
         }
         pageInfo {
@@ -297,12 +297,12 @@ export const UserAttestations = ({ githubUser }: Props) => {
                     <div className="flex flex-wrap gap-2">
                       {attestation.evidences.map((evidence, idx) => {
                         const isVerified = attestation.evidencesVerified?.[idx] || false;
-                        const isColaborator = attestation.evidencesColaborator?.[idx] || false;
+                        const isCollaborator = attestation.evidencesCollaborator?.[idx] || false;
 
                         let bgColor = "";
                         let titleSuffix = "";
 
-                        if (isColaborator) {
+                        if (isCollaborator) {
                           bgColor = "bg-green-100";
                           titleSuffix = " (Verified and Collaborator)";
                         } else if (isVerified) {
