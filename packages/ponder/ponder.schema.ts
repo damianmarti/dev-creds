@@ -8,6 +8,8 @@ export const attestation = onchainTable("attestation", (t) => ({
   skills: t.text().array().notNull(),
   description: t.text().notNull(),
   evidences: t.text().array().notNull(),
+  evidencesVerified: t.boolean().array(),
+  evidencesColaborator: t.boolean().array(),
   timestamp: t.integer().notNull(),
 }));
 
@@ -24,6 +26,8 @@ export const developerSkill = onchainTable(
     githubUser: t.text().notNull(),
     skill: t.text().notNull(),
     count: t.integer().notNull(),
+    verifiedCount: t.integer().notNull(),
+    colaboratorCount: t.integer().notNull(),
     score: t.integer().notNull(),
   }),
   (t) => ({

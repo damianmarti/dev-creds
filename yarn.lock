@@ -3879,6 +3879,7 @@ __metadata:
     eslint-config-ponder: ^0.8.15
     hono: ^4.5.0
     ponder: ^0.8.15
+    redis: ^5.8.2
     typescript: ^5.3.2
     viem: ^2.21.3
   languageName: unknown
