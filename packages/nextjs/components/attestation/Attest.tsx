@@ -1,7 +1,10 @@
+"use client";
+
 import { useState } from "react";
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import { useAccount } from "wagmi";
 import { ArrowSmallRightIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+import scaffoldConfig from "~~/scaffold.config";
 import { notification } from "~~/utils/scaffold-eth";
 import { useSigner } from "~~/utils/useSigner";
 
@@ -10,13 +13,18 @@ export const Attest = () => {
   const [githubUser, setGithubUser] = useState("");
   const [skills, setSkills] = useState<string[]>([""]);
   const [description, setDescription] = useState("");
-  const [evidence, setEvidence] = useState("");
-  const { address } = useAccount();
+  const [evidences, setEvidences] = useState<string[]>([""]);
+  const { address, chainId } = useAccount();
 
   const signer = useSigner();
 
-  const EASContractAddress = "0x4200000000000000000000000000000000000021";
-  const eas = new EAS(EASContractAddress);
+  const easConfig = chainId ? scaffoldConfig.easConfig?.[chainId as keyof typeof scaffoldConfig.easConfig] : undefined;
+
+  if (address && !easConfig) {
+    console.error("EAS not configured for this chain");
+  }
+
+  const eas = easConfig ? new EAS(easConfig.contractAddress) : null;
 
   const addSkill = () => {
     setSkills([...skills, ""]);
@@ -34,26 +42,43 @@ export const Attest = () => {
     setSkills(updatedSkills);
   };
 
+  const addEvidence = () => {
+    setEvidences([...evidences, ""]);
+  };
+
+  const removeEvidence = (index: number) => {
+    if (evidences.length > 1) {
+      setEvidences(evidences.filter((_, i) => i !== index));
+    }
+  };
+
+  const updateEvidence = (index: number, value: string) => {
+    const updatedEvidences = [...evidences];
+    updatedEvidences[index] = value;
+    setEvidences(updatedEvidences);
+  };
+
   const signAttestation = async () => {
-    if (githubUser && address && signer) {
+    if (githubUser && address && signer && eas && easConfig) {
       setIsLoading(true);
 
       try {
         eas.connect(signer);
 
         const schemaEncoder = new SchemaEncoder(
-          "string github_user,string[] skills,string description,string evidence",
+          "string github_user,string[] skills,string description,string[] evidences",
         );
         const validSkills = skills.filter(skill => skill.trim());
+        const validEvidences = evidences.filter(evidence => evidence.trim());
 
         const encodedData = schemaEncoder.encodeData([
           { name: "github_user", value: githubUser, type: "string" },
           { name: "skills", value: validSkills, type: "string[]" },
           { name: "description", value: description, type: "string" },
-          { name: "evidence", value: evidence, type: "string" },
+          { name: "evidences", value: validEvidences, type: "string[]" },
         ]);
 
-        const schemaUID = "0x5fe4eaf3dd73bc3c6929505faacc81ba5cfd50566b6bc34617ae069a5415dbf9";
+        const schemaUID = easConfig.schemaUID;
 
         const tx = await eas.attest(
           {
@@ -80,13 +105,15 @@ export const Attest = () => {
         setGithubUser("");
         setSkills([""]);
         setDescription("");
-        setEvidence("");
+        setEvidences([""]);
       } catch (e) {
         console.log("Error signing attestation: ", e);
         notification.error("Error signing attestation: " + e);
       } finally {
         setIsLoading(false);
       }
+    } else if (!easConfig) {
+      notification.error("EAS is not configured for this network. Please switch to a supported network.");
     }
   };
 
@@ -156,16 +183,39 @@ export const Attest = () => {
               />
             </div>
 
-            {/* Evidence */}
+            {/* Evidences */}
             <div className="flex flex-col gap-2">
-              <div className="font-bold">Evidence:</div>
-              <input
-                type="text"
-                value={evidence}
-                onChange={e => setEvidence(e.target.value)}
-                placeholder="Link to portfolio, projects, or other evidence"
-                className="input input-bordered w-full"
-              />
+              <div className="font-bold">Evidences:</div>
+              <div className="space-y-2">
+                {evidences.map((evidence, index) => (
+                  <div key={index} className="flex gap-2 items-center">
+                    <input
+                      type="text"
+                      value={evidence}
+                      onChange={e => updateEvidence(index, e.target.value)}
+                      placeholder="Link to portfolio, projects, or other evidence"
+                      className="input input-bordered flex-1"
+                    />
+                    {evidences.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeEvidence(index)}
+                        className="btn btn-sm btn-error btn-outline"
+                      >
+                        <TrashIcon className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={addEvidence}
+                  className="btn btn-sm btn-primary btn-outline flex items-center gap-1"
+                >
+                  <PlusIcon className="w-4 h-4" />
+                  Add Evidence
+                </button>
+              </div>
             </div>
 
             {/* Submit Button */}
@@ -176,7 +226,7 @@ export const Attest = () => {
                     className={`btn btn-primary rounded-full capitalize font-normal font-white w-35 flex items-center gap-1 hover:gap-2 transition-all tracking-widest ${
                       isLoading ? "loading" : ""
                     }`}
-                    disabled={isLoading || !githubUser || skills.every(skill => !skill.trim())}
+                    disabled={isLoading || !githubUser || skills.every(skill => !skill.trim()) || !eas || !easConfig}
                     onClick={async () => await signAttestation()}
                   >
                     {!isLoading && (
