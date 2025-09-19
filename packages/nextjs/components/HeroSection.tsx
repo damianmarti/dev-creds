@@ -72,7 +72,7 @@ export function HeroSection() {
 
         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            href="/builder"
+            href="/builders"
             className="btn btn-primary btn-lg rounded-lg gap-2 shadow-md hover:shadow-lg focus-visible:outline-none focus-visible:ring focus-visible:ring-primary/30"
           >
             Get Started
