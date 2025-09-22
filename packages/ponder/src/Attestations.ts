@@ -49,10 +49,14 @@ ponder.on("EAS:Attested", async ({ event, context }) => {
                 for (const evidence of evidences) {
                     let evidenceIsVerified = false;
                     let evidenceIsCollaborator = false;
-                    if (evidence.startsWith("https://github.com/")) {
+                    if (evidence.startsWith("https://github.com/") || evidence.startsWith("github.com/")) {
                         try {
-                             const user = evidence.split("/")[3];
-                             const repository = evidence.split("/")[4];
+                            let evidenceUrl = evidence;
+                            if (evidence.startsWith("github.com/")) {
+                                evidenceUrl = evidence.replace("github.com/", "https://github.com/");
+                            }
+                             const user = evidenceUrl.split("/")[3];
+                             const repository = evidenceUrl.split("/")[4];
                              const headers: Record<string, string> = {};
                              if (process.env.GITHUB_TOKEN) {
                                  headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
