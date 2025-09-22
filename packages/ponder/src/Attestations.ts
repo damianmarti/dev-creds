@@ -34,7 +34,7 @@ ponder.on("EAS:Attested", async ({ event, context }) => {
 
             const evidencesData: Record<string, { verified_count: number, collaborator_count: number }> = {};
 
-            skills.forEach(async (skill) => {
+            skills.forEach((skill) => {
                 evidencesData[skill.toLowerCase()] = {
                     verified_count: 0,
                     collaborator_count: 0,
@@ -68,6 +68,15 @@ ponder.on("EAS:Attested", async ({ event, context }) => {
                                 const contributors = data.map((contributor: any) => contributor.login.toLowerCase());
                                 if (contributors.includes(githubUser)) {
                                     const isCollaborator = attesterUsername && contributors.some((contributor: string) => contributor === attesterUsername.toLowerCase());
+                                    if (isCollaborator) {
+                                        evidenceIsCollaborator = true;
+                                        skills.forEach((skill) => {
+                                            const skillData = evidencesData[skill.toLowerCase()];
+                                            if (skillData) {
+                                                skillData.collaborator_count += 1;
+                                            }
+                                        });
+                                    }
                                     const responseLanguages = await fetch(`https://api.github.com/repos/${user}/${repository}/languages`, { headers });
                                     const languagesData = await responseLanguages.json();
                                     const languages = Object.keys(languagesData as Record<string, any>);
@@ -76,10 +85,6 @@ ponder.on("EAS:Attested", async ({ event, context }) => {
                                         if (evidencesData[languageLower]) {
                                             evidenceIsVerified = true;
                                             evidencesData[languageLower].verified_count += 1;
-                                            if (isCollaborator) {
-                                                evidenceIsCollaborator = true;
-                                                evidencesData[languageLower].collaborator_count += 1;
-                                            }
                                         }
                                     });
                                 }
