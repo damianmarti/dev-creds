@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { GithubSVG } from "./GithubSVG";
+import { GithubSVG } from "../components/assets/GithubSVG";
 import { queryClient } from "./ScaffoldEthAppWithProviders";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Address } from "abitype";
