@@ -7,6 +7,7 @@ type Attestation = {
   description: string;
   evidences: string[];
   timestamp: number;
+  verified?: boolean;
 };
 
 type Skill = {
