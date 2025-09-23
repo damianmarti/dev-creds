@@ -6,6 +6,8 @@ type Attestation = {
   skills: string[];
   description: string;
   evidences: string[];
+  evidencesVerified: boolean[];
+  evidencesCollaborator: boolean[];
   timestamp: number;
   verified?: boolean;
 };

@@ -188,18 +188,34 @@ export const UserAttestations = ({ githubUser }: Props) => {
                   <div>
                     <h4 className="font-medium mb-2">Evidence:</h4>
                     <div className="flex flex-wrap gap-2">
-                      {attestation.evidences.map((evidence, idx) => (
-                        <a
-                          key={idx}
-                          href={evidence}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="btn btn-sm btn-outline btn-primary text-xs"
-                          title={evidence}
-                        >
-                          {evidence.length > 40 ? `${evidence.substring(0, 40)}...` : evidence}
-                        </a>
-                      ))}
+                      {attestation.evidences.map((evidence, idx) => {
+                        const isVerified = attestation.evidencesVerified?.[idx] || false;
+                        const isCollaborator = attestation.evidencesCollaborator?.[idx] || false;
+
+                        let bgColor = "";
+                        let titleSuffix = "";
+
+                        if (isCollaborator) {
+                          bgColor = "bg-green-100";
+                          titleSuffix = " (Verified and Collaborator)";
+                        } else if (isVerified) {
+                          bgColor = "bg-orange-100";
+                          titleSuffix = " (Verified)";
+                        }
+
+                        return (
+                          <a
+                            key={idx}
+                            href={evidence}
+                            target="_blank"
+                            rel="noreferrer"
+                            className={`btn btn-sm btn-outline btn-primary text-xs ${bgColor}`}
+                            title={evidence + titleSuffix}
+                          >
+                            {evidence.length > 40 ? `${evidence.substring(0, 40)}...` : evidence}
+                          </a>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
