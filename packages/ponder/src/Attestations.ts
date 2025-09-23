@@ -115,7 +115,11 @@ ponder.on("EAS:Attested", async ({ event, context }) => {
                 githubUser: githubUser,
             }).onConflictDoNothing();
 
-            skills.forEach(async (skill) => {
+            for (let i = 0; i < skills.length; i++) {
+                const skill = skills[i];
+                if (!skill) {
+                    continue;
+                }
                 const evidenceData = evidencesData[skill.toLowerCase()];
                 let verifiedCount = 0;
                 let collaboratorCount = 0;
@@ -136,7 +140,7 @@ ponder.on("EAS:Attested", async ({ event, context }) => {
                     collaboratorCount: row.collaboratorCount + collaboratorCount,
                     score: row.score + 1 + verifiedCount + collaboratorCount,
                   }));
-            });
+            }
         }
     }
 });
