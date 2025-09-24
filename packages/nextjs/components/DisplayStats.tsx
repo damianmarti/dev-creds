@@ -33,7 +33,6 @@ export const DisplayStats = () => {
   const { data: statsData, isLoading: statsLoading } = useQuery<StatsResponse>({
     queryKey: ["stats-count"],
     queryFn: () => request(PONDER_GRAPHQL_URL, STATS_QUERY),
-    refetchInterval: 30000, // Refetch every 30 seconds
   });
 
   const attestationsCount = statsData?.attestations?.totalCount || 0;
@@ -61,7 +60,7 @@ export const DisplayStats = () => {
             developerSkillsCount.toLocaleString()
           )}
         </div>
-        <div className="stat-desc">Attestations</div>
+        <div className="stat-desc">Skills Attested</div>
       </div>
 
       <div className="stat text-center">
@@ -72,7 +71,7 @@ export const DisplayStats = () => {
             attestationsCount.toLocaleString()
           )}
         </div>
-        <div className="stat-desc">Verified Collaborations</div>
+        <div className="stat-desc">Attestations</div>
       </div>
     </div>
   );
