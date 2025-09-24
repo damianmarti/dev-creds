@@ -29,12 +29,20 @@ const STATS_QUERY = gql`
   }
 `;
 
-export const ReusuableStats = ({ stats }: { stats: { label: string; value: number }[] }) => {
+export const ReusuableStats = ({
+  stats,
+  statsLoading,
+}: {
+  stats: { label: string; value: number }[];
+  statsLoading?: boolean;
+}) => {
   return (
     <div className="bg-base-100 stats stats-vertical md:stats-horizontal shadow w-full mt-2">
       {stats.map((stat, index) => (
         <div key={index} className="stat text-center">
-          <div className="stat-value text-tertiary font-serif">{stat.value}</div>
+          <div className="stat-value text-tertiary font-serif">
+            {statsLoading ? <span className="loading loading-spinner loading-sm"></span> : stat.value}
+          </div>
           <div className="stat-desc">{stat.label}</div>
         </div>
       ))}
@@ -48,44 +56,15 @@ export const DisplayStats = () => {
     queryFn: () => request(PONDER_GRAPHQL_URL, STATS_QUERY),
   });
 
-  const attestationsCount = statsData?.attestations?.totalCount || 0;
-  const developersCount = statsData?.developers?.totalCount || 0;
-  const developerSkillsCount = statsData?.developerSkills?.totalCount || 0;
+  const stats = [
+    { label: "Developers", value: statsData?.attestations?.totalCount || 0 },
+    { label: "Skills Attested", value: statsData?.developers?.totalCount || 0 },
+    { label: "Attestations", value: statsData?.developerSkills?.totalCount || 0 },
+  ];
 
   return (
-    <div className="mt-10 bg-base-100 stats stats-vertical md:stats-horizontal shadow">
-      <div className="stat text-center">
-        <div className="stat-value text-tertiary font-serif">
-          {statsLoading ? (
-            <span className="loading loading-spinner loading-sm"></span>
-          ) : (
-            developersCount.toLocaleString()
-          )}
-        </div>
-        <div className="stat-desc">Developers</div>
-      </div>
-
-      <div className="stat text-center">
-        <div className="stat-value text-tertiary font-serif">
-          {statsLoading ? (
-            <span className="loading loading-spinner loading-sm"></span>
-          ) : (
-            developerSkillsCount.toLocaleString()
-          )}
-        </div>
-        <div className="stat-desc">Skills Attested</div>
-      </div>
-
-      <div className="stat text-center">
-        <div className="stat-value text-tertiary font-serif">
-          {statsLoading ? (
-            <span className="loading loading-spinner loading-sm"></span>
-          ) : (
-            attestationsCount.toLocaleString()
-          )}
-        </div>
-        <div className="stat-desc">Attestations</div>
-      </div>
+    <div className="max-w-24xl mt-10 mx-auto">
+      <ReusuableStats stats={stats} statsLoading={statsLoading} />
     </div>
   );
 };
