@@ -20,11 +20,7 @@ function normalizeSkill(skill: string) {
 }
 
 function displayLabel(skill: string) {
-  return skill
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, " ")
-    .replace(/(^|\s)\S/g, letter => letter.toUpperCase());
+  return skill.trim().toLowerCase().replace(/\s+/g, " ");
 }
 
 function normalizeSkills(skills: string[]) {
@@ -232,11 +228,11 @@ export function BuildersFilter({
               .map(skillKey => normalizedSkills.find(option => option.key === skillKey))
               .filter((option): option is { key: string; label: string } => Boolean(option))
               .map(option => (
-                <div key={option.key} className="badge badge-primary badge-sm gap-1 py-2">
+                <div key={option.key} className="badge badge-primary badge-sm gap-1 py-2 cursor-pointer">
                   <span>{option.label}</span>
                   <button
                     onClick={() => removeSkill(option.key)}
-                    className="hover:bg-primary-focus rounded-full p-0.5 transition-colors"
+                    className="hover:bg-primary-focus rounded-full p-0.5 transition-colors cursor-pointer"
                     aria-label={`Remove ${option.label}`}
                   >
                     <XMarkIcon className="w-2.5 h-2.5" />

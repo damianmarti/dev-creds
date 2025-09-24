@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "wagmi/query";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { Skill, SkillsData } from "~~/types";
 import { fetchUserSkills } from "~~/utils/graphql";
 
-const SKILLS_PAGE_SIZE = 4;
+const SKILLS_PAGE_SIZE = 10;
 
 function SkillCard({ skill }: { skill: Skill }) {
   return (
@@ -36,28 +36,16 @@ export function Skills({ username }: { username: string }) {
 
   const [skillsPageIndex, setSkillsPageIndex] = useState(0);
 
-  useEffect(() => {
-    setSkillsPageIndex(0);
-  }, [username, skillsData]);
+  const allSkillsItems = useMemo(() => {
+    return (skillsData as SkillsData)?.developerSkills?.items ?? [];
+  }, [skillsData]);
 
-  const rankedSkills: Skill[] = useMemo(() => {
-    if (isSkillsLoading || isSkillsError) return [];
-    const source = (skillsData as SkillsData).developerSkills?.items ?? [];
-    return source
-      .map(item => ({
-        skill: item.skill,
-        count: item.count,
-        score: item.score,
-      }))
-      .sort((a, b) => (b.count !== a.count ? b.count - a.count : b.score - a.score));
-  }, [skillsData, isSkillsLoading, isSkillsError]);
-
-  const totalSkillsPages = Math.max(1, Math.ceil(rankedSkills.length / SKILLS_PAGE_SIZE));
+  const totalSkillsPages = Math.max(1, Math.ceil(allSkillsItems.length / SKILLS_PAGE_SIZE));
 
   const currentPageSkills = useMemo(() => {
     const startIndex = skillsPageIndex * SKILLS_PAGE_SIZE;
-    return rankedSkills.slice(startIndex, startIndex + SKILLS_PAGE_SIZE);
-  }, [rankedSkills, skillsPageIndex]);
+    return allSkillsItems.slice(startIndex, startIndex + SKILLS_PAGE_SIZE);
+  }, [allSkillsItems, skillsPageIndex]);
 
   function goToPreviousSkillsPage() {
     if (skillsPageIndex > 0) setSkillsPageIndex(skillsPageIndex - 1);
@@ -66,7 +54,6 @@ export function Skills({ username }: { username: string }) {
   function goToNextSkillsPage() {
     if (skillsPageIndex + 1 < totalSkillsPages) setSkillsPageIndex(skillsPageIndex + 1);
   }
-
   return (
     <div className="card border border-base-300 bg-base-100 shadow-xl">
       <div className="card-body">
@@ -100,14 +87,14 @@ export function Skills({ username }: { username: string }) {
               </div>
             ))}
           </div>
-        ) : rankedSkills.length === 0 ? (
+        ) : allSkillsItems.length === 0 ? (
           <div className="mt-4 text-base-content/70">No verified skills yet.</div>
         ) : (
           <div className="flex flex-col gap-4 mt-4">
             {currentPageSkills.map(skill => (
               <SkillCard key={skill.skill} skill={skill} />
             ))}
-            {!isSkillsLoading && rankedSkills.length > 0 && (
+            {!isSkillsLoading && allSkillsItems.length > 0 && (
               <div className="flex items-center justify-end gap-2">
                 <button
                   onClick={goToPreviousSkillsPage}

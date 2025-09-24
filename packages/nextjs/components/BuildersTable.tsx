@@ -5,15 +5,12 @@ import Link from "next/link";
 import { BuildersFilter, filterDevelopers } from "./BuildersFilter";
 import { GithubSVG } from "./assets/GithubSVG";
 import { Address } from "./scaffold-eth";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import scaffoldConfig from "~~/scaffold.config";
-import type { AttestationsData } from "~~/types";
-import { fetchAttestations } from "~~/utils/graphql";
+import { fetchDevelopersForTable } from "~~/utils/graphql";
 
 const DEVELOPER_PAGE_SIZE = 30;
-const ATTESTATION_PAGE_SIZE = 500;
-const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 
 export type DeveloperForTable = {
   name: string;
@@ -28,74 +25,6 @@ export type DeveloperForTable = {
   };
   topCollaborators: string[];
 };
-
-type Attestation = AttestationsData["attestations"]["items"][number];
-
-function toDevelopers(rows: Attestation[], now = Date.now(), windowMs = THIRTY_DAYS_MS): DeveloperForTable[] {
-  type Aggregate = {
-    username: string;
-    name: string;
-    avatarUrl: string;
-    githubUrl: string;
-    skillSet: Set<string>;
-    attesterSet: Set<string>;
-    monthlyTotal: number;
-    monthlyVerified: number;
-  };
-
-  const byUsername = new Map<string, Aggregate>();
-
-  for (const row of rows) {
-    const username = row.githubUser?.trim();
-
-    let agg = byUsername.get(username);
-    if (!agg) {
-      agg = {
-        username,
-        name: username,
-        avatarUrl: `https://github.com/${username}.png`,
-        githubUrl: `https://github.com/${username}`,
-        skillSet: new Set<string>(),
-        attesterSet: new Set<string>(),
-        monthlyTotal: 0,
-        monthlyVerified: 0,
-      };
-      byUsername.set(username, agg);
-    }
-
-    if (row.skills) {
-      for (const skill of row.skills) {
-        const normalised = skill.trim().toLowerCase();
-        if (normalised) {
-          agg.skillSet.add(normalised.charAt(0).toUpperCase() + normalised.slice(1));
-        }
-      }
-    }
-    if (row.attester) agg.attesterSet.add(row.attester);
-
-    const tsMs = (row.timestamp ?? 0) * 1000;
-    const inWindow = tsMs >= now - windowMs;
-    if (inWindow) {
-      agg.monthlyTotal += 1;
-    }
-  }
-  return Array.from(byUsername.values())
-    .map(data => ({
-      name: data.name,
-      username: data.username,
-      avatar: data.avatarUrl,
-      githubUrl: data.githubUrl,
-      monthlyAttestations: data.monthlyTotal,
-      skills: Array.from(data.skillSet).sort(),
-      attestations: { total: data.monthlyTotal, verified: data.monthlyVerified },
-      topCollaborators: Array.from(data.attesterSet),
-    }))
-    .sort((d1, d2) =>
-      d2.attestations.total !== d1.attestations.total
-        ? d2.attestations.total - d1.attestations.total
-        : d1.username.localeCompare(d2.username),
-    );
-}
 
 function TableHeader() {
   return (
@@ -203,8 +132,8 @@ export function BuildersTable({ developers }: { developers: DeveloperForTable[] 
       <TableHeader />
       <div className="divide-y divide-base-200 md:divide-y">
         {developers.length === 0 && <div className="p-4 text-center text-base-content/70">No builders found</div>}
-        {developers.map(dev => (
-          <DeveloperRow key={dev.username} developer={dev} />
+        {developers.map((dev, i) => (
+          <DeveloperRow key={i} developer={dev} />
         ))}
       </div>
     </div>
@@ -212,42 +141,31 @@ export function BuildersTable({ developers }: { developers: DeveloperForTable[] 
 }
 
 export function BuildersFromAttestations() {
+  type DevPage = {
+    developers: DeveloperForTable[];
+    pageInfo: { hasNextPage: boolean; endCursor?: string | null };
+  };
+
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [usernameQuery, setUsernameQuery] = useState("");
-  const [developerPageIndex, setDeveloperPageIndex] = useState(0); // 0-based
-
-  type PageParam = string | undefined;
-
-  // Each attestation row type (from your GraphQL shape)
-  type AttestationRow = AttestationsData["attestations"]["items"][number];
+  const [developerPageIndex, setDeveloperPageIndex] = useState(0);
 
   const {
-    data: infiniteAttestations,
-    isLoading: isLoadingAttestations,
-    hasNextPage: hasMoreAttestations,
-    fetchNextPage: fetchNextAttestations,
-    isFetching: isFetchingAttestations,
-  } = useInfiniteQuery<AttestationsData, Error, AttestationsData, [string, number], PageParam>({
-    queryKey: ["attestations", ATTESTATION_PAGE_SIZE],
-    queryFn: ({ pageParam }) => fetchAttestations(ATTESTATION_PAGE_SIZE, pageParam),
-    initialPageParam: undefined as PageParam,
-    getNextPageParam: lastPage =>
-      lastPage.attestations.pageInfo.hasNextPage ? lastPage.attestations.pageInfo.endCursor : undefined,
+    data: devPage,
+    isLoading: isLoadingDevelopers,
+    isFetching: isFetchingDevelopers,
+  } = useQuery<DevPage>({
+    queryKey: ["developers", DEVELOPER_PAGE_SIZE],
+    queryFn: () => fetchDevelopersForTable(DEVELOPER_PAGE_SIZE),
     refetchInterval: scaffoldConfig.pollingInterval,
   });
 
-  const allAttestationRows = useMemo<AttestationRow[]>(() => {
-    return (
-      (infiniteAttestations as any)?.pages.flatMap((page: AttestationsData) => page.attestations?.items ?? []) ?? []
-    );
-  }, [infiniteAttestations]);
-
-  const developers = useMemo(() => {
-    return toDevelopers(allAttestationRows);
-  }, [allAttestationRows]);
+  const developers = useMemo(() => devPage?.developers || [], [devPage]);
 
   const allSkills = useMemo(() => {
-    return Array.from(new Set(developers.flatMap(developer => developer.skills)));
+    const newSet = new Set<string>();
+    developers.forEach(dev => dev.skills.forEach(skill => newSet.add(skill)));
+    return Array.from(newSet).sort((a, b) => a.localeCompare(b));
   }, [developers]);
 
   const filteredDevelopers = useMemo(() => {
@@ -264,9 +182,6 @@ export function BuildersFromAttestations() {
   function goToNextDeveloperPage() {
     if (developerPageIndex + 1 < totalDeveloperPages) {
       setDeveloperPageIndex(developerPageIndex + 1);
-    } else if (hasMoreAttestations) {
-      // optional: pull another attestation page to reveal more developers
-      fetchNextAttestations();
     }
   }
 
@@ -293,16 +208,15 @@ export function BuildersFromAttestations() {
         usernameQuery={usernameQuery}
         onUsernameQueryChange={handleUsernameQueryChange}
       />
-
       <div className="flex flex-col gap-6">
-        {isLoadingAttestations ? (
+        {isLoadingDevelopers ? (
           <div className="p-4">Loading…</div>
         ) : (
           <BuildersTable developers={currentPageDevelopers} />
         )}
 
         <div className="flex items-center justify-between">
-          <div className="text-sm opacity-70">{isFetchingAttestations ? "Syncing…" : ""}</div>
+          <div className="text-sm opacity-70">{isFetchingDevelopers ? "Syncing…" : ""}</div>
 
           <div className="flex items-center gap-4">
             <button
@@ -320,7 +234,7 @@ export function BuildersFromAttestations() {
 
             <button
               onClick={goToNextDeveloperPage}
-              disabled={developerPageIndex + 1 >= totalDeveloperPages && !hasMoreAttestations}
+              disabled={developerPageIndex + 1 >= totalDeveloperPages}
               className="btn btn-outline btn-sm flex items-center gap-1"
             >
               Next
@@ -328,14 +242,6 @@ export function BuildersFromAttestations() {
             </button>
           </div>
         </div>
-
-        {hasMoreAttestations && (
-          <div className="flex justify-end">
-            <button onClick={() => fetchNextAttestations()} className="btn btn-ghost btn-xs">
-              Load more data
-            </button>
-          </div>
-        )}
       </div>
     </>
   );

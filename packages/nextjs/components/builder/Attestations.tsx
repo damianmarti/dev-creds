@@ -62,7 +62,7 @@ function AttestationCard({ attestation }: { attestation: Attestation }) {
 export function Attestations({ username }: { username: string }) {
   const [cursor, setCursor] = useState<string | undefined>(undefined);
   const [cursorStack, setCursorStack] = useState<string[]>([]);
-  const pageSize = 3;
+  const pageSize = 5;
 
   const {
     data: attestationsData,
