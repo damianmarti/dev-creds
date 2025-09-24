@@ -63,7 +63,7 @@ export const DisplayStats = () => {
   ];
 
   return (
-    <div className="max-w-24xl mt-10 mx-auto">
+    <div className="mt-10">
       <ReusuableStats stats={stats} statsLoading={statsLoading} />
     </div>
   );
