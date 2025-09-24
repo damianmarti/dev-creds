@@ -29,6 +29,19 @@ const STATS_QUERY = gql`
   }
 `;
 
+export const ReusuableStats = ({ stats }: { stats: { label: string; value: number }[] }) => {
+  return (
+    <div className="bg-base-100 stats stats-vertical md:stats-horizontal shadow w-full mt-2">
+      {stats.map((stat, index) => (
+        <div key={index} className="stat text-center">
+          <div className="stat-value text-tertiary font-serif">{stat.value}</div>
+          <div className="stat-desc">{stat.label}</div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 export const DisplayStats = () => {
   const { data: statsData, isLoading: statsLoading } = useQuery<StatsResponse>({
     queryKey: ["stats-count"],
