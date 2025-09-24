@@ -21,6 +21,8 @@ export type ScaffoldConfig = BaseConfig;
 
 export const DEFAULT_ALCHEMY_API_KEY = "oKxs-03sij-U_N0iOlrSsZFr29-IqbuF";
 
+export const PONDER_GRAPHQL_URL = process.env.NEXT_PUBLIC_PONDER_URL || "http://localhost:42069";
+
 const scaffoldConfig = {
   // The networks on which your DApp is live
   targetNetworks: [chains.optimismSepolia],
