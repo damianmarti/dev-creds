@@ -61,8 +61,8 @@ export function HeroSection() {
 
         <h1 className="text-5xl md:text-7xl font-serif font-bold leading-tight tracking-tight space-y-1">
           <span className="block">Build Your</span>
-          <span className="text-tertiary block">Developer Reputation</span>
-          <span className="text-tertiary">On-Chain</span>
+          <span className="text-primary block">Developer Reputation</span>
+          <span className="text-secondary">On-Chain</span>
         </h1>
 
         <p className="mt-6 text-md md:text-lg text-base-content/70 max-w-2xl mx-auto leading-relaxed">
