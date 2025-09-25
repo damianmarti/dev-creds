@@ -55,8 +55,8 @@ export function HeroSection() {
     <section className="bg-base-100">
       <div className="w-full max-w-6xl mx-auto px-4 py-12 text-center">
         <div className="mb-4 flex items-center justify-center gap-2 text-sm">
-          <span className="badge badge-outline border-base-300 text-base-content/70">Built on Arbitrum</span>
-          <span className="badge badge-outline border-base-300 text-base-content/70">On-chain attestations</span>
+          <span className="badge badge-outline badge-primary">Built on Arbitrum</span>
+          <span className="badge badge-outline badge-primary">On-chain attestations</span>
         </div>
 
         <h1 className="text-5xl md:text-7xl font-serif font-bold leading-tight tracking-tight space-y-1">
