@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import { useAccount } from "wagmi";
 import { ArrowSmallRightIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
@@ -9,8 +10,9 @@ import { notification } from "~~/utils/scaffold-eth";
 import { useSigner } from "~~/utils/useSigner";
 
 export const Attest = () => {
+  const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
-  const [githubUser, setGithubUser] = useState("");
+  const [githubUser, setGithubUser] = useState(searchParams.get("username") || "");
   const [skills, setSkills] = useState<string[]>([""]);
   const [description, setDescription] = useState("");
   const [evidences, setEvidences] = useState<string[]>([""]);

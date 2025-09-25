@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { GithubSVG } from "./GithubSVG";
+import { GithubSVG } from "../components/assets/GithubSVG";
 import { ArrowRightIcon, ShieldCheckIcon, UsersIcon } from "@heroicons/react/24/outline";
 
 type HeroFeature = {

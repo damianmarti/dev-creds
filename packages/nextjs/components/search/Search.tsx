@@ -2,62 +2,8 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { gql, request } from "graphql-request";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-
-type Developer = {
-  githubUser: string;
-  skills: {
-    items: {
-      skill: string;
-      count: number;
-      score: number;
-    }[];
-  };
-  attestations: {
-    items: {
-      id: string;
-    }[];
-  };
-};
-
-type SearchData = {
-  developers: {
-    items: Developer[];
-  };
-};
-
-const PONDER_GRAPHQL_URL = "http://localhost:42069"; // Default Ponder GraphQL endpoint
-
-const searchDevelopers = async (githubUsername: string): Promise<SearchData> => {
-  const searchQuery = gql`
-    query SearchDevelopers($githubUser: String!) {
-      developers(where: { githubUser_contains: $githubUser }) {
-        items {
-          githubUser
-          skills {
-            items {
-              skill
-              count
-              score
-            }
-          }
-          attestations {
-            items {
-              id
-            }
-          }
-        }
-      }
-    }
-  `;
-
-  const data = await request<SearchData>(PONDER_GRAPHQL_URL, searchQuery, {
-    githubUser: githubUsername.toLowerCase(),
-  });
-
-  return data;
-};
+import { searchDevelopers } from "~~/utils/graphql";
 
 export const Search = () => {
   const [searchTerm, setSearchTerm] = useState("");

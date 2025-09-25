@@ -1,68 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { gql, request } from "graphql-request";
 import { Address } from "~~/components/scaffold-eth";
 import scaffoldConfig from "~~/scaffold.config";
-
-type Attestation = {
-  id: string;
-  attester: string;
-  uid: string;
-  githubUser: string;
-  skills: string[];
-  description: string;
-  evidences: string[];
-  timestamp: number;
-};
-type AttestationsData = {
-  attestations: {
-    items: Attestation[];
-    pageInfo: {
-      hasNextPage: boolean;
-      hasPreviousPage: boolean;
-      startCursor: string | null;
-      endCursor: string | null;
-    };
-  };
-};
-
-const PONDER_GRAPHQL_URL = "http://localhost:42069"; // Ponder GraphQL endpoint
-
-const fetchAttestations = async (pageSize: number = 20, cursor?: string) => {
-  const AttestationsQuery = gql`
-    query Attestations($limit: Int!, $after: String) {
-      attestations(limit: $limit, after: $after, orderBy: "timestamp", orderDirection: "desc") {
-        items {
-          id
-          attester
-          uid
-          githubUser
-          skills
-          description
-          evidences
-          timestamp
-        }
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-          startCursor
-          endCursor
-        }
-      }
-    }
-  `;
-
-  const variables: any = {
-    limit: pageSize,
-  };
-
-  if (cursor) {
-    variables.after = cursor;
-  }
-
-  const data = await request<AttestationsData>(PONDER_GRAPHQL_URL, AttestationsQuery, variables);
-  return data;
-};
+import { fetchAttestations } from "~~/utils/graphql";
 
 export const List = () => {
   const targetNetwork = scaffoldConfig.targetNetworks[0];
@@ -178,7 +118,6 @@ export const List = () => {
         </table>
       </div>
 
-      {/* Pagination Controls */}
       {attestationsData && (
         <div className="flex justify-center items-center mt-6 gap-4">
           <button onClick={goPrevious} disabled={cursors.length === 0} className="btn btn-outline">

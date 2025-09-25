@@ -176,10 +176,12 @@ export const Address = ({
               {onlyEnsOrAddress ? displayEnsOrAddress : displayAddress}
             </AddressLinkWrapper>
           </span>
-          <AddressCopyIcon
-            className={`ml-1 ${copyIconSizeMap[addressSize]} cursor-pointer`}
-            address={checkSumAddress}
-          />
+          {onlyEnsOrAddress ? null : (
+            <AddressCopyIcon
+              className={`ml-1 ${copyIconSizeMap[addressSize]} cursor-pointer`}
+              address={checkSumAddress}
+            />
+          )}
         </div>
       </div>
     </div>
