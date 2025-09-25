@@ -45,6 +45,16 @@ export const developerSkillRelations = relations(developerSkill, ({ one }) => ({
 
 export const developer = onchainTable("developer", (t) => ({
   githubUser: t.text().primaryKey(),
+  name: t.text(),
+  bio: t.text(),
+  location: t.text(),
+  website: t.text(),
+  twitter: t.text(),
+  attestationsCount: t.integer().notNull(),
+  verifiedAttestationsCount: t.integer().notNull(),
+  colaboratorAttestationsCount: t.integer().notNull(),
+  score: t.integer().notNull(),
+  updatedAt: t.integer().notNull(),
 }));
 
 export const developerRelations = relations(developer, ({ many }) => ({

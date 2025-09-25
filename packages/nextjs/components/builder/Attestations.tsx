@@ -1,10 +1,6 @@
-import { useMemo, useState } from "react";
 import Link from "next/link";
-import { useQuery } from "wagmi/query";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
-import { Attestation, AttestationsData } from "~~/types";
-import { fetchUserAttestations } from "~~/utils/graphql";
+import { Attestation, Developer } from "~~/types";
 
 function AttestationCard({ attestation }: { attestation: Attestation }) {
   return (
@@ -59,72 +55,15 @@ function AttestationCard({ attestation }: { attestation: Attestation }) {
   );
 }
 
-export function Attestations({ username }: { username: string }) {
-  const [cursor, setCursor] = useState<string | undefined>(undefined);
-  const [cursorStack, setCursorStack] = useState<string[]>([]);
-  const pageSize = 5;
-
-  const {
-    data: attestationsData,
-    isLoading: isAttestationsLoading,
-    error: attestationsError,
-    refetch: refetchAttestations,
-    isFetching: isAttestationsFetching,
-  } = useQuery({
-    queryKey: ["userAttestations", username, cursor],
-    queryFn: () => fetchUserAttestations(username, pageSize, cursor),
-  });
-
-  const attestations = useMemo(
-    () => (attestationsData as AttestationsData)?.attestations.items ?? [],
-    [attestationsData],
-  );
-
-  const hasNextPage = Boolean((attestationsData as AttestationsData)?.attestations.pageInfo.hasNextPage);
-  const pageNumber = cursorStack.length + 1;
-
-  function goToNextPage() {
-    if (!hasNextPage) return;
-    const nextCursor = (attestationsData as AttestationsData)?.attestations.pageInfo.endCursor;
-    if (!nextCursor) return;
-    setCursorStack(previous => [...previous, cursor || ""]);
-    setCursor(nextCursor);
-  }
-
-  function goToPreviousPage() {
-    if (cursorStack.length === 0) return;
-    const previousCursor = cursorStack[cursorStack.length - 1] || undefined;
-    setCursorStack(previous => previous.slice(0, -1));
-    setCursor(previousCursor);
-  }
-
-  if (attestationsError) {
-    return (
-      <div className="card border border-base-300 bg-base-100 shadow-xl">
-        <div className="card-body">
-          <div className="alert alert-error">
-            <span>Failed to load attestations.</span>
-            <button className="btn btn-xs ml-auto" onClick={() => refetchAttestations()}>
-              Retry
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
+export function Attestations({ developer, isLoading }: { developer: Developer; isLoading: boolean }) {
   return (
     <div className="card border border-base-300 bg-base-100 shadow-xl">
       <div className="card-body">
         <div className="flex items-center justify-between">
           <h2 className="card-title font-serif text-xl sm:text-2xl">Recent Attestations</h2>
-
-          <div className="flex items-center gap-3">
-            {isAttestationsFetching && <span className="text-xs text-base-content/60">Syncing…</span>}
-          </div>
         </div>
 
-        {isAttestationsLoading ? (
+        {isLoading ? (
           <div className="space-y-4 mt-4">
             {[0, 1, 2].map(index => (
               <div key={index} className="bg-base-200 rounded-lg p-4">
@@ -143,33 +82,21 @@ export function Attestations({ username }: { username: string }) {
               </div>
             ))}
           </div>
-        ) : attestations.length === 0 ? (
+        ) : developer.attestations.items.length === 0 ? (
           <div className="mt-6 text-center text-base-content/70">No attestations found.</div>
         ) : (
-          <div className="space-y-6 mt-4">
-            {attestations.map(attestation => (
-              <AttestationCard key={attestation.id} attestation={attestation} />
-            ))}
-            <div className="flex items-center justify-end gap-2">
-              <button
-                onClick={goToPreviousPage}
-                disabled={cursorStack.length === 0 || isAttestationsLoading}
-                className="btn btn-outline btn-sm"
-                aria-label="Previous page"
-              >
-                <ChevronLeftIcon className="h-5 w-5" />
-              </button>
-              <span className="text-sm font-medium">Page {pageNumber}</span>
-              <button
-                onClick={goToNextPage}
-                disabled={!hasNextPage || isAttestationsLoading}
-                className="btn btn-outline btn-sm"
-                aria-label="Next page"
-              >
-                <ChevronRightIcon className="h-5 w-5" />
-              </button>
+          <>
+            <div className="space-y-6 mt-4">
+              {developer.attestations.items.map(attestation => (
+                <AttestationCard key={attestation.id} attestation={attestation} />
+              ))}
             </div>
-          </div>
+            <div className="mt-6 text-center">
+              <a href={`/attestations/${developer.githubUser}`} className="btn btn-outline btn-primary">
+                View all attestations
+              </a>
+            </div>
+          </>
         )}
       </div>
     </div>

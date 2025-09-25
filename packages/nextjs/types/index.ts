@@ -38,7 +38,16 @@ type SkillsData = {
 
 type Developer = {
   githubUser: string;
-  description: string | null;
+  name: string;
+  bio: string;
+  location: string;
+  website: string;
+  twitter: string;
+  attestationsCount: number;
+  verifiedAttestationsCount: number;
+  colaboratorAttestationsCount: number;
+  score: number;
+  updatedAt: number;
   skills: {
     items: {
       skill: string;
@@ -49,6 +58,15 @@ type Developer = {
   attestations: {
     items: {
       id: string;
+      attester: string;
+      githubUser: string;
+      uid: string;
+      skills: string[];
+      description: string;
+      evidences: string[];
+      timestamp: number;
+      evidencesVerified: boolean[];
+      evidencesCollaborator: boolean[];
     }[];
   };
 };
