@@ -38,7 +38,7 @@ function FeatureCard({
   description: string;
 }) {
   return (
-    <div className="card shadow-md hover:shadow-lg transition-transform hover:-translate-y-0.5">
+    <div className="bg-base-100 card shadow-md hover:shadow-lg transition-transform hover:-translate-y-0.5">
       <div className="card-body items-center text-center gap-3">
         <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-base-200">
           <Icon className="w-7 h-7 text-primary" aria-hidden="true" />
@@ -52,7 +52,7 @@ function FeatureCard({
 
 export function HeroSection() {
   return (
-    <section className="bg-base-100">
+    <section className="bg-background">
       <div className="w-full max-w-6xl mx-auto px-4 py-12 text-center">
         <div className="mb-4 flex items-center justify-center gap-2 text-sm">
           <span className="badge badge-outline badge-primary">Built on Arbitrum</span>
@@ -75,7 +75,7 @@ export function HeroSection() {
             href="/builders"
             className="btn btn-primary btn-lg rounded-lg gap-2 shadow-md hover:shadow-lg focus-visible:outline-none focus-visible:ring focus-visible:ring-primary/30"
           >
-            Get Started
+            Builder Leaderboard
             <ArrowRightIcon className="w-5 h-5" aria-hidden="true" />
           </Link>
         </div>
