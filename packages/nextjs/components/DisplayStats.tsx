@@ -57,9 +57,9 @@ export const DisplayStats = () => {
   });
 
   const stats = [
-    { label: "Developers", value: statsData?.attestations?.totalCount || 0 },
-    { label: "Skills Attested", value: statsData?.developers?.totalCount || 0 },
-    { label: "Attestations", value: statsData?.developerSkills?.totalCount || 0 },
+    { label: "Developers", value: statsData?.developers?.totalCount || 0 },
+    { label: "Attestations", value: statsData?.attestations?.totalCount || 0 },
+    { label: "Skills Attested", value: statsData?.developerSkills?.totalCount || 0 },
   ];
 
   return (
