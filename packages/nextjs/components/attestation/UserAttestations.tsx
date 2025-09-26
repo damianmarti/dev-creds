@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Address } from "~~/components/scaffold-eth";
 import scaffoldConfig from "~~/scaffold.config";
-import { fetchUserAttestations, fetchUserSkills } from "~~/utils/graphql";
+import { fetchUserAttestations } from "~~/utils/graphql";
 
 type Props = {
   githubUser: string;
@@ -28,12 +28,6 @@ export const UserAttestations = ({ githubUser }: Props) => {
     refetchInterval: scaffoldConfig.pollingInterval,
   });
 
-  const { data: skillsData, isLoading: skillsLoading } = useQuery({
-    queryKey: ["userSkills", githubUser],
-    queryFn: () => fetchUserSkills(githubUser),
-    refetchInterval: scaffoldConfig.pollingInterval,
-  });
-
   const goNext = () => {
     if (attestationsData?.attestations.pageInfo.hasNextPage) {
       const newCursor = attestationsData.attestations.pageInfo.endCursor;
@@ -52,10 +46,7 @@ export const UserAttestations = ({ githubUser }: Props) => {
     }
   };
 
-  const isLoading = attestationsLoading || skillsLoading;
-  const error = attestationsError;
-
-  if (isLoading) {
+  if (attestationsLoading) {
     return (
       <div className="flex justify-center items-center py-16">
         <span className="loading loading-spinner loading-lg"></span>
@@ -64,7 +55,7 @@ export const UserAttestations = ({ githubUser }: Props) => {
     );
   }
 
-  if (error) {
+  if (attestationsError) {
     return (
       <div className="alert alert-error">
         <div>
@@ -93,25 +84,6 @@ export const UserAttestations = ({ githubUser }: Props) => {
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
-      {/* Skills Overview */}
-      {skillsData && skillsData.developerSkills.items.length > 0 && (
-        <div className="bg-base-200 rounded-lg p-6">
-          <h2 className="text-2xl font-bold mb-4">Skills Overview</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {skillsData.developerSkills.items
-              .sort((a, b) => b.score - a.score)
-              .map((skillData, index) => (
-                <div key={index} className="bg-base-100 rounded-lg p-4 shadow">
-                  <div className="flex justify-between items-center">
-                    <h3 className="font-semibold text-lg">{skillData.skill}</h3>
-                    <div className="badge badge-primary">{skillData.score}</div>
-                  </div>
-                </div>
-              ))}
-          </div>
-        </div>
-      )}
-
       {/* Attestations List */}
       <div className="bg-base-200 rounded-lg p-6">
         <div className="flex justify-between items-center mb-4">
