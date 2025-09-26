@@ -38,7 +38,7 @@ function FeatureCard({
   description: string;
 }) {
   return (
-    <div className="bg-base-100 card shadow-md hover:shadow-lg transition-transform hover:-translate-y-0.5">
+    <div className="bg-base-100 card shadow-md">
       <div className="card-body items-center text-center gap-3">
         <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-base-200">
           <Icon className="w-7 h-7 text-primary" aria-hidden="true" />
