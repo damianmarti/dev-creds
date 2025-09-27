@@ -51,8 +51,8 @@ export const HeaderMenuLinks = () => {
               href={href}
               passHref
               className={`${
-                isActive ? "bg-secondary shadow-md" : ""
-              } hover:bg-secondary hover:shadow-md focus:!bg-secondary active:!text-neutral py-1.5 px-3 text-sm rounded-full gap-2 grid grid-flow-col`}
+                isActive ? "bg-secondary shadow-md text-secondary-content" : ""
+              } hover:bg-secondary hover:shadow-md focus:!bg-secondary active:!text-secondary-content hover:!text-secondary-content py-1.5 px-3 text-sm rounded-md gap-2 grid grid-flow-col`}
             >
               {icon}
               <span>{label}</span>
@@ -77,7 +77,7 @@ export const Header = () => {
   });
 
   return (
-    <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 shrink-0 justify-between z-20 shadow-md shadow-secondary px-0 sm:px-2">
+    <div className="sticky lg:static top-0 navbar bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 min-h-0 shrink-0 justify-between z-20 x-0 sm:px-2 border-b border-base-200">
       <div className="navbar-start w-auto lg:w-1/2">
         <details className="dropdown" ref={burgerMenuRef}>
           <summary className="ml-1 btn btn-ghost lg:hidden hover:bg-transparent">
@@ -94,7 +94,7 @@ export const Header = () => {
         </details>
         <Link href="/" passHref className="hidden lg:flex items-center gap-2 ml-4 mr-6 shrink-0">
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-lg font-serif">D</span>
+            <span className="text-primary-content font-bold text-lg font-serif">D</span>
           </div>
           <span className="font-serif font-bold text-xl text-foreground">DevCreds</span>
         </Link>
@@ -103,7 +103,7 @@ export const Header = () => {
         </ul>
       </div>
       <div className="navbar-end grow mr-4">
-        <SwitchTheme className={`pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`} />
+        <SwitchTheme className={`mr-1 md:mr-2 pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`} />
         <RainbowKitCustomConnectButton />
         {isLocalNetwork && <FaucetButton />}
       </div>

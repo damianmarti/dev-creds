@@ -120,10 +120,10 @@ export const Attest = () => {
   };
 
   return (
-    <div className="flex bg-base-300 relative pb-10">
-      <div className="flex flex-col w-full mx-5 sm:mx-8 2xl:mx-20">
-        <div className="text-sm flex flex-col mt-6 px-7 py-8 bg-base-200 opacity-80 rounded-xl shadow-lg border-2 border-primary">
-          <span className="text-l sm:text-4xl text-black">Attest Developer Skills</span>
+    <div className="bg-base-300 relative pb-10">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-2xl lg:max-w-3xl text-sm flex flex-col mt-6 px-6 sm:px-7 py-6 sm:py-8 bg-base-200/80 backdrop-blur-sm rounded-xl shadow-xl border border-base-300">
+          <span className="text-l sm:text-4xl">Attest Developer Skills</span>
 
           <div className="mt-8 space-y-6">
             {/* GitHub User */}
@@ -222,23 +222,19 @@ export const Attest = () => {
 
             {/* Submit Button */}
             <div className="flex justify-center mt-8">
-              <div className="flex rounded-full border border-primary p-1 flex-shrink-0">
-                <div className="flex rounded-full border-2 border-primary p-1">
-                  <button
-                    className={`btn btn-primary rounded-full capitalize font-normal font-white w-35 flex items-center gap-1 hover:gap-2 transition-all tracking-widest ${
-                      isLoading ? "loading" : ""
-                    }`}
-                    disabled={isLoading || !githubUser || skills.every(skill => !skill.trim()) || !eas || !easConfig}
-                    onClick={async () => await signAttestation()}
-                  >
-                    {!isLoading && (
-                      <>
-                        Attest <ArrowSmallRightIcon className="w-3 h-3 mt-0.5" />
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
+              <button
+                className={`btn btn-primary btn-wide rounded-full capitalize font-normal w-35 flex items-center gap-2 transition-all tracking-widest ${
+                  isLoading ? "loading" : ""
+                }`}
+                disabled={isLoading || !githubUser || skills.every(skill => !skill.trim()) || !eas || !easConfig}
+                onClick={async () => await signAttestation()}
+              >
+                {!isLoading && (
+                  <>
+                    Attest <ArrowSmallRightIcon className="w-4 h-4 mt-0.5" />
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>
