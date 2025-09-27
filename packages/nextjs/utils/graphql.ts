@@ -1,7 +1,11 @@
 import { gql, request } from "graphql-request";
 import { DeveloperForTable } from "~~/components/BuildersTable";
 import { PONDER_GRAPHQL_URL } from "~~/scaffold.config";
-import { AttestationsData, SearchData, SkillsData } from "~~/types";
+import { AttestationsData, Developer, SearchData, SkillsData } from "~~/types";
+
+type DeveloperResponse = {
+  developer: Developer;
+};
 
 export const fetchAttestations = async (pageSize: number = 20, cursor?: string) => {
   const AttestationsQuery = gql`
@@ -99,6 +103,50 @@ export const fetchUserSkills = async (githubUser: string): Promise<SkillsData> =
   });
 
   return data;
+};
+
+export const fetchDeveloper = async (githubUser: string): Promise<Developer> => {
+  const developerQuery = gql`
+    query Developer($githubUser: String!) {
+      developer(githubUser: $githubUser) {
+        githubUser
+        name
+        bio
+        location
+        website
+        twitter
+        attestationsCount
+        verifiedAttestationsCount
+        colaboratorAttestationsCount
+        score
+        updatedAt
+        skills(orderBy: "count", orderDirection: "desc") {
+          items {
+            skill
+            count
+            score
+          }
+        }
+        attestations(orderBy: "timestamp", orderDirection: "desc", limit: 5) {
+          items {
+            id
+            attester
+            uid
+            skills
+            description
+            evidences
+            timestamp
+          }
+        }
+      }
+    }
+  `;
+
+  const data = await request<DeveloperResponse>(PONDER_GRAPHQL_URL, developerQuery, {
+    githubUser: githubUser.toLowerCase(),
+  });
+
+  return data.developer;
 };
 
 export const searchDevelopers = async (githubUsername: string): Promise<SearchData> => {
