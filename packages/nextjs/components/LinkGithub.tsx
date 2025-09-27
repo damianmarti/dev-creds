@@ -13,7 +13,7 @@ type LinkGitHubProps = { address: Address };
 
 const SignInButton = ({ onClick, disabled }: { onClick: () => void; disabled?: boolean }) => (
   <button onClick={onClick} disabled={disabled} className="btn btn-primary btn-sm ml-2">
-    Link GitHub account
+    Link GitHub
   </button>
 );
 
@@ -79,7 +79,7 @@ export const LinkGithub = ({ address }: LinkGitHubProps) => {
     link.mutate(username as string);
   }, [authStatus, data, session, link]);
 
-  if (status === "pending") return <div className="loading loading-spinner loading-sm" />;
+  if (status === "pending") return <div className="loading loading-spinner loading-sm ml-2" />;
 
   if (data?.username) return <Username username={data.username} />;
 
