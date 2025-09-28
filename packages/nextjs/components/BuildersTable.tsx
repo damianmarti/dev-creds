@@ -208,7 +208,7 @@ export function BuildersFromAttestations() {
         usernameQuery={usernameQuery}
         onUsernameQueryChange={handleUsernameQueryChange}
       />
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6 mb-8">
         {isLoadingDevelopers ? (
           <div className="p-4">Loading…</div>
         ) : (

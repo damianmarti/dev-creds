@@ -6,7 +6,7 @@ import { List } from "~~/components/attestation/List";
 const Home: NextPage = () => {
   return (
     <>
-      <div className="flex items-center flex-col grow pt-10">
+      <div className="flex items-center flex-col grow py-10">
         <h1 className="text-center text-4xl font-bold">Attestations</h1>
         <List />
       </div>
