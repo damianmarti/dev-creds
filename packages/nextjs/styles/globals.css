@@ -82,7 +82,7 @@
   }
 
   main {
-    @apply px-4;
+    @apply px-0;
     background-color: var(--color-background);
   }
 
@@ -139,6 +139,3 @@
 .menu {
   @apply gap-[1px] rounded-md;
 }
-
-
-

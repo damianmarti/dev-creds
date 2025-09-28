@@ -43,7 +43,7 @@ export const ReusuableStats = ({
           <div className="stat-value text-tertiary font-serif">
             {statsLoading ? <span className="loading loading-spinner loading-sm"></span> : stat.value}
           </div>
-          <div className="stat-desc">{stat.label}</div>
+          <div className="stat-desc text-sm sm:text-md">{stat.label}</div>
         </div>
       ))}
     </div>
@@ -63,7 +63,7 @@ export const DisplayStats = () => {
   ];
 
   return (
-    <div className="mt-10">
+    <div>
       <ReusuableStats stats={stats} statsLoading={statsLoading} />
     </div>
   );
