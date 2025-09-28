@@ -6,7 +6,7 @@ export const Footer = () => {
   return (
     <footer className="border-t border-base-300 bg-base-200 text-base-content">
       <div className="px-6 py-12 mx-[2%] sm:mx-[4%] md:mx-[10%] lg:mx-[12%] xl:mx-[15%]">
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_2.5rem_auto_1fr] gap-x-6 gap-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-[1fr_2.5rem_auto_1fr] gap-x-6 gap-y-6">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
@@ -20,7 +20,7 @@ export const Footer = () => {
           </div>
 
           {/* Spacer to separate Brand from the middle section without affecting other gaps */}
-          <div className="hidden md:block" />
+          <div className="hidden xl:block" />
 
           <div className="md:flex md:gap-6 space-y-8 md:space-y-0">
             <div className="space-y-4 md:min-w-[14rem]">
@@ -65,7 +65,8 @@ export const Footer = () => {
               </div>
             </div>
           </div>
-          <div className="space-y-3">
+
+          <div className="space-y-3 md:col-span-2 md:flex md:justify-center md:items-center md:gap-8 md:mt-6 md:space-y-0 xl:col-span-1 xl:block xl:space-y-3 xl:mt-0">
             <div className="flex items-center gap-2 flex-wrap">
               <span>Built by</span>
               <a
