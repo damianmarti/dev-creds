@@ -37,7 +37,7 @@ export const List = () => {
   };
 
   return (
-    <div className="list__container flex flex-col justify-center items-center bg-[url('/assets/gradient-bg.png')] bg-[length:100%_100%] py-10 px-5 sm:px-0 lg:py-auto max-w-[100vw] ">
+    <div className="list__container flex flex-col justify-center items-center py-10 px-5 sm:px-0 lg:py-auto max-w-[100vw] ">
       <div className="flex justify-center">
         <table className="table table-zebra w-full shadow-lg">
           <thead>
