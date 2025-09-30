@@ -91,12 +91,12 @@ Built with Next.js, RainbowKit, Wagmi, Viem, TypeScript, and Ponder for blockcha
 
 - **Frontend (Next.js)**: Handles UI, wallet connections, and EAS contract interactions
 - **Ponder Indexer**: Listens for EAS `Attested` events, verifies GitHub evidence, and maintains the database
-- **Redis**: Caches GitHub API responses and manages user sessions
+- **Redis**: Stores mappings between GitHub accounts and wallet addresses
 - **EAS Contracts**: Stores attestations on-chain with immutable records
 
 ## Redis Setup
 
-This project uses Redis for caching GitHub data and managing sessions.
+This project uses Redis to persist GitHub account links to wallet addresses used by both Next.js and Ponder indexer.
 
 **Option 1: Redis Cloud (Recommended)**
 
