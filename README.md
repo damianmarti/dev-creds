@@ -14,8 +14,6 @@ A decentralized developer credentials platform built with [Scaffold-ETH 2](https
 
 ---
 
-This repository was built with [Scaffold-ETH 2](https://github.com/scaffold-eth/scaffold-eth-2).
-
 ## Requirements
 
 Before you begin, you need to install the following tools:
@@ -185,6 +183,4 @@ For more information about EAS, visit the [Ethereum Attestation Service Document
 
 ## Contributing
 
-We welcome contributions to Dev Creds!
-
-Please feel free to submit issues and pull requests.
+We welcome contributions to Dev Creds! Please feel free to submit issues and pull requests.
