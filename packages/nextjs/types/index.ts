@@ -15,6 +15,8 @@ type Attestation = {
 type Skill = {
   skill: string;
   count: number;
+  verifiedCount: number;
+  collaboratorCount: number;
   score: number;
 };
 
@@ -52,6 +54,8 @@ type Developer = {
     items: {
       skill: string;
       count: number;
+      verifiedCount: number;
+      collaboratorCount: number;
       score: number;
     }[];
   };
