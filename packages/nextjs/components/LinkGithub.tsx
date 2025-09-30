@@ -19,7 +19,7 @@ const SignInButton = ({ onClick, disabled }: { onClick: () => void; disabled?: b
 
 const Username = ({ username }: { username: string }) => {
   return (
-    <Link href={`/builder/${username}`} className="btn btn-ghost btn-sm ml-2" target="_blank" rel="noopener noreferrer">
+    <Link href={`/builder/${username}`} className="btn btn-ghost btn-sm ml-2">
       <span className="ml-2 inline-flex items-center gap-1 font-bold">
         <GithubSVG />
         {username}
