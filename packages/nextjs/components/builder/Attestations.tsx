@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Address } from "../scaffold-eth";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { Attestation, Developer } from "~~/types";
 
@@ -7,21 +8,15 @@ function AttestationCard({ attestation }: { attestation: Attestation }) {
     <div className="relative border-l-2 border-primary/20 pl-4 space-y-3">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="avatar">
-            <div className="mask mask-squircle h-10 w-10 bg-base-200"></div>
-          </div>
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-              <span className="font-medium text-base-content">(placeholderforcompute)</span>
+              <Address address={attestation.attester} size="base" onlyEnsOrAddress />
               {attestation.verified && (
                 <div className="badge badge-outline badge-success badge-sm">
                   <CheckCircleIcon className="mr-1 h-3 w-3" />
                   Verified
                 </div>
               )}
-            </div>
-            <div className="flex items-center gap-2 text-xs sm:text-sm text-base-content/70">
-              <span>@{attestation.attester}</span>
             </div>
           </div>
         </div>
