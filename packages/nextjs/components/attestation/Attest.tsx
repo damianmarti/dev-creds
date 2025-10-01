@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { SkillAutocomplete } from "../SkillAutocomplete";
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import { useAccount } from "wagmi";
 import { ArrowSmallRightIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
@@ -143,13 +144,7 @@ export const Attest = ({ github }: { github?: string }) => {
               <div className="space-y-2">
                 {skills.map((skill, index) => (
                   <div key={index} className="flex gap-2 items-center">
-                    <input
-                      type="text"
-                      value={skill}
-                      onChange={e => updateSkill(index, e.target.value)}
-                      placeholder="Enter a skill"
-                      className="input input-bordered flex-1"
-                    />
+                    <SkillAutocomplete index={index} skill={skill} updateSkill={updateSkill} />
                     {skills.length > 1 && (
                       <button
                         type="button"
