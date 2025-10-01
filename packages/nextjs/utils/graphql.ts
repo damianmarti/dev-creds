@@ -88,10 +88,12 @@ export const fetchUserAttestations = async (
 export const fetchUserSkills = async (githubUser: string): Promise<SkillsData> => {
   const skillsQuery = gql`
     query UserSkills($githubUser: String!) {
-      developerSkills(where: { githubUser: $githubUser }, orderBy: "count", orderDirection: "desc") {
+      developerSkills(where: { githubUser: $githubUser }, orderBy: "score", orderDirection: "desc") {
         items {
           skill
           count
+          verifiedCount
+          collaboratorCount
           score
         }
       }
