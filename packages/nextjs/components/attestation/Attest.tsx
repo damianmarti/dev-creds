@@ -61,6 +61,16 @@ export const Attest = ({ github }: { github?: string }) => {
     setEvidences(updatedEvidences);
   };
 
+  const isValidUrl = (value: string) => {
+    if (!value.trim()) return true;
+    try {
+      new URL(value);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
   const signAttestation = async () => {
     if (githubUser && address && signer && eas && easConfig) {
       setIsLoading(true);
@@ -183,26 +193,32 @@ export const Attest = ({ github }: { github?: string }) => {
             <div className="flex flex-col gap-2">
               <div className="font-bold">Evidences:</div>
               <div className="space-y-2">
-                {evidences.map((evidence, index) => (
-                  <div key={index} className="flex gap-2 items-center">
-                    <input
-                      type="text"
-                      value={evidence}
-                      onChange={e => updateEvidence(index, e.target.value)}
-                      placeholder="Link to portfolio, projects, or other evidence"
-                      className="input input-bordered flex-1"
-                    />
-                    {evidences.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeEvidence(index)}
-                        className="btn btn-sm btn-error btn-outline"
-                      >
-                        <TrashIcon className="w-4 h-4" />
-                      </button>
-                    )}
-                  </div>
-                ))}
+                {evidences.map((evidence, index) => {
+                  const valid = isValidUrl(evidence);
+                  return (
+                    <div key={index} className="flex flex-col gap-1">
+                      <div className="flex gap-2 items-center">
+                        <input
+                          type="text"
+                          value={evidence}
+                          onChange={e => updateEvidence(index, e.target.value)}
+                          placeholder="Link to portfolio, projects, or other evidence"
+                          className={`input input-bordered flex-1 ${!valid ? "input-error" : ""}`}
+                        />
+                        {evidences.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => removeEvidence(index)}
+                            className="btn btn-sm btn-error btn-outline"
+                          >
+                            <TrashIcon className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                      {!valid && <span className="text-error text-xs ml-1">Please enter a valid URL (https://…)</span>}
+                    </div>
+                  );
+                })}
                 <button
                   type="button"
                   onClick={addEvidence}
