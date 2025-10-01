@@ -40,24 +40,24 @@ export function SkillAutocomplete({ index, skill, updateSkill }: SkillInputProps
         }}
         onFocus={() => setOpen(true)}
         onKeyDown={handleKeyDown}
-        onBlur={() => setTimeout(() => setOpen(false), 150)} // allow click
+        onBlur={() => setTimeout(() => setOpen(false), 150)}
         placeholder="Enter a skill"
         className="input input-bordered w-full"
       />
 
       {open && filtered.length > 0 && (
         <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box shadow-lg absolute z-10 mt-1 w-full">
-          {filtered.map((s, i) => (
+          {filtered.map((skill, i) => (
             <li key={i}>
               <button
                 type="button"
                 onClick={() => {
-                  updateSkill(index, s);
+                  updateSkill(index, skill);
                   setOpen(false);
                 }}
                 className="text-left w-full"
               >
-                {s}
+                {skill}
               </button>
             </li>
           ))}
