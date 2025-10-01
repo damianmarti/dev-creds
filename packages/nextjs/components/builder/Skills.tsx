@@ -36,7 +36,7 @@ function SkillCard({ skill }: { skill: Skill }) {
               <span className="text-sm text-base-content/80">Collaborator Attested</span>
               <div className="flex items-center gap-2">
                 <span className="text-xs text-base-content/60">({collaboratorRate}%)</span>
-                <span className="badge badge-info badge-sm">{skill.collaboratorCount}</span>
+                <span className="badge badge-warning badge-sm">{skill.collaboratorCount}</span>
               </div>
             </div>
           </div>
