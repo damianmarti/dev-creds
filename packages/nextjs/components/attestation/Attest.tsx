@@ -233,13 +233,16 @@ export const Attest = ({ github }: { github?: string }) => {
             {/* Submit Button */}
             <div className="flex justify-center mt-8">
               <button
-                className={`btn btn-primary btn-wide rounded-full capitalize font-normal w-35 flex items-center gap-2 transition-all tracking-widest ${
-                  isLoading ? "loading" : ""
-                }`}
+                className="btn btn-primary btn-wide rounded-full capitalize font-normal w-35 flex items-center gap-2 transition-all tracking-widest"
                 disabled={isLoading || !githubUser || skills.every(skill => !skill.trim()) || !eas || !easConfig}
                 onClick={async () => await signAttestation()}
               >
-                {!isLoading && (
+                {isLoading ? (
+                  <>
+                    <span className="loading loading-spinner loading-sm"></span>
+                    Attesting...
+                  </>
+                ) : (
                   <>
                     Attest <ArrowSmallRightIcon className="w-4 h-4 mt-0.5" />
                   </>
