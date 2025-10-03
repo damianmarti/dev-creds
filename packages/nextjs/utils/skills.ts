@@ -34,6 +34,21 @@ export const SKILLS = [
   "Graph Protocol",
   "Subgraph",
   "Ponder",
+  "IPFS",
+  "Ethers.js",
+  "Tenderly",
+  "WalletConnect",
+
+  // Web3 Concepts
+  "Tokenomics Design",
+  "Layer 2 - Scaling",
+  "Account Abstraction",
+  "Oracles",
+  "MEV",
+  "Smart Contract Security",
+  "Gas Optimization",
+  "Upgradeable Contracts",
+  "Flashloans",
 
   // DevOps & Infra
   "Docker",
@@ -56,6 +71,9 @@ export const SKILLS = [
   "Mocha",
   "Chai",
   "Vitest",
+  "Cypress",
+  "Playwright",
+  "Synpress",
 
   // Misc
   "Git",
