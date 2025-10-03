@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { UsersIcon } from "@heroicons/react/24/outline";
 import { Address } from "~~/components/scaffold-eth";
 import scaffoldConfig from "~~/scaffold.config";
 import { fetchUserAttestations } from "~~/utils/graphql";
@@ -115,7 +116,17 @@ export const UserAttestations = ({ githubUser }: Props) => {
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <h3 className="font-semibold text-lg mb-1">
-                      Attestation by <Address address={attestation.attester} size="sm" />
+                      Attestation by
+                      <div className="flex items-center gap-2">
+                        <Address address={attestation.attester} size="sm" />
+                        {attestation.evidencesCollaborator.some(collaborator => collaborator === true) && (
+                          <div className="tooltip" data-tip="Collaborator">
+                            <div className="badge badge-outline badge-primary badge-sm">
+                              <UsersIcon className="mr-1 h-4 w-4" />
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </h3>
                     <p className="text-sm text-base-content/70">
                       {new Date(attestation.timestamp * 1000).toLocaleDateString()}
