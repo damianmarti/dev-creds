@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { SkillAutocomplete } from "../SkillAutocomplete";
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import { useAccount } from "wagmi";
 import { ArrowSmallRightIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
@@ -9,10 +10,10 @@ import scaffoldConfig from "~~/scaffold.config";
 import { notification } from "~~/utils/scaffold-eth";
 import { useSigner } from "~~/utils/useSigner";
 
-export const Attest = () => {
+export const Attest = ({ github }: { github?: string }) => {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
-  const [githubUser, setGithubUser] = useState(searchParams.get("username") || "");
+  const [githubUser, setGithubUser] = useState(searchParams.get("username") || github || "");
   const [skills, setSkills] = useState<string[]>([""]);
   const [description, setDescription] = useState("");
   const [evidences, setEvidences] = useState<string[]>([""]);
@@ -58,6 +59,16 @@ export const Attest = () => {
     const updatedEvidences = [...evidences];
     updatedEvidences[index] = value;
     setEvidences(updatedEvidences);
+  };
+
+  const isValidUrl = (value: string) => {
+    if (!value.trim()) return true;
+    try {
+      new URL(value);
+      return true;
+    } catch {
+      return false;
+    }
   };
 
   const signAttestation = async () => {
@@ -120,11 +131,10 @@ export const Attest = () => {
   };
 
   return (
-    <div className="bg-base-300 relative pb-10">
+    <div className="relative">
       <div className="w-full px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto w-full max-w-2xl lg:max-w-3xl text-sm flex flex-col mt-6 px-6 sm:px-7 py-6 sm:py-8 bg-base-200/80 backdrop-blur-sm rounded-xl shadow-xl border border-base-300">
+        <div className="mx-auto w-full max-w-2xl lg:max-w-3xl text-sm flex flex-col mt-6 px-6 sm:px-7 py-6 sm:py-8 bg-base-200/80 backdrop-blur-sm rounded-xl border border-base-300">
           <span className="text-l sm:text-4xl">Attest Developer Skills</span>
-
           <div className="mt-8 space-y-6">
             {/* GitHub User */}
             <div className="flex flex-col gap-2">
@@ -144,13 +154,7 @@ export const Attest = () => {
               <div className="space-y-2">
                 {skills.map((skill, index) => (
                   <div key={index} className="flex gap-2 items-center">
-                    <input
-                      type="text"
-                      value={skill}
-                      onChange={e => updateSkill(index, e.target.value)}
-                      placeholder="Enter a skill"
-                      className="input input-bordered flex-1"
-                    />
+                    <SkillAutocomplete index={index} skill={skill} updateSkill={updateSkill} />
                     {skills.length > 1 && (
                       <button
                         type="button"
@@ -189,26 +193,32 @@ export const Attest = () => {
             <div className="flex flex-col gap-2">
               <div className="font-bold">Evidences:</div>
               <div className="space-y-2">
-                {evidences.map((evidence, index) => (
-                  <div key={index} className="flex gap-2 items-center">
-                    <input
-                      type="text"
-                      value={evidence}
-                      onChange={e => updateEvidence(index, e.target.value)}
-                      placeholder="Link to portfolio, projects, or other evidence"
-                      className="input input-bordered flex-1"
-                    />
-                    {evidences.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeEvidence(index)}
-                        className="btn btn-sm btn-error btn-outline"
-                      >
-                        <TrashIcon className="w-4 h-4" />
-                      </button>
-                    )}
-                  </div>
-                ))}
+                {evidences.map((evidence, index) => {
+                  const valid = isValidUrl(evidence);
+                  return (
+                    <div key={index} className="flex flex-col gap-1">
+                      <div className="flex gap-2 items-center">
+                        <input
+                          type="text"
+                          value={evidence}
+                          onChange={e => updateEvidence(index, e.target.value)}
+                          placeholder="Link to portfolio, projects, or other evidence"
+                          className={`input input-bordered flex-1 ${!valid ? "input-error" : ""}`}
+                        />
+                        {evidences.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => removeEvidence(index)}
+                            className="btn btn-sm btn-error btn-outline"
+                          >
+                            <TrashIcon className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                      {!valid && <span className="text-error text-xs ml-1">Please enter a valid URL (https://…)</span>}
+                    </div>
+                  );
+                })}
                 <button
                   type="button"
                   onClick={addEvidence}
@@ -223,13 +233,16 @@ export const Attest = () => {
             {/* Submit Button */}
             <div className="flex justify-center mt-8">
               <button
-                className={`btn btn-primary btn-wide rounded-full capitalize font-normal w-35 flex items-center gap-2 transition-all tracking-widest ${
-                  isLoading ? "loading" : ""
-                }`}
+                className="btn btn-primary btn-wide rounded-full capitalize font-normal w-35 flex items-center gap-2 transition-all tracking-widest"
                 disabled={isLoading || !githubUser || skills.every(skill => !skill.trim()) || !eas || !easConfig}
                 onClick={async () => await signAttestation()}
               >
-                {!isLoading && (
+                {isLoading ? (
+                  <>
+                    <span className="loading loading-spinner loading-sm"></span>
+                    Attesting...
+                  </>
+                ) : (
                   <>
                     Attest <ArrowSmallRightIcon className="w-4 h-4 mt-0.5" />
                   </>
