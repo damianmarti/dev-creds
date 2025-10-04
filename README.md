@@ -2,7 +2,7 @@
 
 ![Dev Creds Sample](https://github.com/user-attachments/assets/d9e53927-984e-4191-9c35-341884df8fb4)
 
-A decentralized developer credentials platform built with [Scaffold-ETH 2](https://github.com/scaffold-eth/scaffold-eth-2) and the [Ethereum Attestation Service (EAS)](https://attest.org/). Developers can receive and give attestations for their skills, backed by verifiable GitHub evidence, creating an on-chain reputation system for builders.
+A decentralized developer credentials platform built on Arbitrum with [Scaffold-ETH 2](https://github.com/scaffold-eth/scaffold-eth-2) and the [Ethereum Attestation Service (EAS)](https://attest.org/). Developers can receive and give attestations for their skills, backed by verifiable GitHub evidence, creating an on-chain reputation system for builders.
 
 **Key features:**
 
