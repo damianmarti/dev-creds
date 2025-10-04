@@ -1,10 +1,13 @@
+import { useState } from "react";
 import Link from "next/link";
 import { ReusuableStats } from "../DisplayStats";
 import { GithubSVG } from "../assets/GithubSVG";
+import { Attest } from "../attestation/Attest";
 import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
 import { Developer } from "~~/types";
 
 export function ProfileHeader({ developer }: { developer: Developer }) {
+  const [open, setOpen] = useState(false);
   const avatarUrl = `https://github.com/${developer.githubUser}.png`;
   const githubUrl = `https://github.com/${developer.githubUser}`;
   const stats = [
@@ -33,15 +36,14 @@ export function ProfileHeader({ developer }: { developer: Developer }) {
                 <GithubSVG />
                 GitHub
               </Link>
-              <Link
-                href={{ pathname: "/attest", query: { username: developer.githubUser } }}
+              <button
                 className="btn btn-primary btn-sm flex items-center gap-2"
-                prefetch={false}
+                onClick={() => setOpen(true)}
                 aria-label={`Attest for ${developer.githubUser}`}
               >
                 <ChatBubbleLeftRightIcon className="h-4 w-4" />
                 <span>Attest</span>
-              </Link>
+              </button>
             </div>
           </div>
 
@@ -54,6 +56,19 @@ export function ProfileHeader({ developer }: { developer: Developer }) {
             <ReusuableStats stats={stats} />
           </div>
         </div>
+        <dialog id="attest-modal" className={`modal ${open ? "modal-open" : ""}`}>
+          <div className="modal-box w-11/12 max-w-2xl rounded-xl">
+            <Attest github={developer.githubUser} />
+            <div className="modal-action">
+              <button onClick={() => setOpen(false)} className="btn btn-primary btn-sm">
+                Close
+              </button>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button onClick={() => setOpen(false)}>close</button>
+          </form>
+        </dialog>
       </div>
     </div>
   );
