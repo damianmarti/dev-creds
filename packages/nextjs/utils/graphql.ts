@@ -59,6 +59,8 @@ export const fetchUserAttestations = async (
           skills
           description
           evidences
+          evidencesVerified
+          evidencesCollaborator
           timestamp
         }
         pageInfo {
@@ -137,6 +139,8 @@ export const fetchDeveloper = async (githubUser: string): Promise<Developer> => 
             skills
             description
             evidences
+            evidencesVerified
+            evidencesCollaborator
             timestamp
           }
         }
