@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 import { GithubSVG } from "../components/assets/GithubSVG";
 import { queryClient } from "./ScaffoldEthAppWithProviders";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -18,10 +19,12 @@ const SignInButton = ({ onClick, disabled }: { onClick: () => void; disabled?: b
 
 const Username = ({ username }: { username: string }) => {
   return (
-    <span className="ml-2 inline-flex items-center gap-1 font-bold">
-      <GithubSVG />
-      {username}
-    </span>
+    <Link href={`/builder/${username}`} className="btn btn-ghost btn-sm ml-2">
+      <span className="ml-2 inline-flex items-center gap-1 font-bold">
+        <GithubSVG />
+        {username}
+      </span>
+    </Link>
   );
 };
 

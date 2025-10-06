@@ -1,80 +1,103 @@
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { hardhat } from "viem/chains";
-import { CurrencyDollarIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { HeartIcon } from "@heroicons/react/24/outline";
-import { SwitchTheme } from "~~/components/SwitchTheme";
-import { BuidlGuidlLogo } from "~~/components/assets/BuidlGuidlLogo";
-import { Faucet } from "~~/components/scaffold-eth";
-import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
-import { useGlobalState } from "~~/services/store/store";
 
-/**
- * Site footer
- */
 export const Footer = () => {
-  const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrency.price);
-  const { targetNetwork } = useTargetNetwork();
-  const isLocalNetwork = targetNetwork.id === hardhat.id;
-
   return (
-    <div className="min-h-0 py-5 px-1 mb-11 lg:mb-0">
-      <div>
-        <div className="fixed flex justify-between items-center w-full z-10 p-4 bottom-0 left-0 pointer-events-none">
-          <div className="flex flex-col md:flex-row gap-2 pointer-events-auto">
-            {nativeCurrencyPrice > 0 && (
-              <div>
-                <div className="btn btn-primary btn-sm font-normal gap-1 cursor-auto">
-                  <CurrencyDollarIcon className="h-4 w-4" />
-                  <span>{nativeCurrencyPrice.toFixed(2)}</span>
-                </div>
+    <footer className="border-t border-base-300 bg-base-200 text-base-content">
+      <div className="px-6 py-12 mx-[2%] sm:mx-[4%] md:mx-[10%] lg:mx-[12%] xl:mx-[15%]">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-[1fr_2.5rem_auto_1fr] gap-x-6 gap-y-6">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <span className="text-primary-content font-bold text-lg font-serif">D</span>
               </div>
-            )}
-            {isLocalNetwork && (
-              <>
-                <Faucet />
-                <Link href="/blockexplorer" passHref className="btn btn-primary btn-sm font-normal gap-1">
-                  <MagnifyingGlassIcon className="h-4 w-4" />
-                  <span>Block Explorer</span>
-                </Link>
-              </>
-            )}
+              <span className="font-serif font-bold text-xl">DevCreds</span>
+            </div>
+            <p className="opacity-70 text-sm">
+              Building verifiable developer reputation on Arbitrum with peer attestations and skill verification.
+            </p>
           </div>
-          <SwitchTheme className={`pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`} />
+
+          {/* Spacer to separate Brand from the middle section without affecting other gaps */}
+          <div className="hidden xl:block" />
+
+          <div className="md:flex md:gap-6 space-y-8 md:space-y-0">
+            <div className="space-y-4 md:min-w-[14rem]">
+              <h3 className="font-serif font-semibold">Product</h3>
+              <div className="space-y-2 text-sm">
+                <Link href="/builders" className="block opacity-70 hover:opacity-100 transition-colors">
+                  Builders
+                </Link>
+                <Link href="/attest" className="block opacity-70 hover:opacity-100 transition-colors">
+                  Attest
+                </Link>
+                <Link href="/attestations" className="block opacity-70 hover:opacity-100 transition-colors">
+                  Attestations
+                </Link>
+              </div>
+            </div>
+
+            <div className="space-y-4 md:min-w-[14rem]">
+              <h3 className="font-serif font-semibold">Community</h3>
+              <div className="space-y-2 text-sm">
+                <Link
+                  href="https://github.com/damianmarti/dev-creds"
+                  target="_blank"
+                  className="block opacity-70 hover:opacity-100 transition-colors"
+                >
+                  GitHub
+                </Link>
+                <Link
+                  href="https://x.com/buidlguidl"
+                  target="_blank"
+                  className="block opacity-70 hover:opacity-100 transition-colors"
+                >
+                  Twitter
+                </Link>
+                <Link
+                  href="https://t.me/joinchat/KByvmRe5wkR-8F_zz6AjpA"
+                  target="_blank"
+                  className="block opacity-70 hover:opacity-100 transition-colors"
+                >
+                  Telegram
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-3 md:col-span-2 md:flex md:justify-center md:items-center md:gap-8 md:mt-6 md:space-y-0 xl:col-span-1 xl:block xl:space-y-3 xl:mt-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span>Built by</span>
+              <a
+                href="https://arbitrum.buidlguidl.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center"
+              >
+                <Image
+                  alt="BuidlGuidl Logo"
+                  src="/logo-buidlguidl.svg"
+                  width={135}
+                  height={27}
+                  className="h-5 w-auto mb-1.5"
+                />
+              </a>
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span>Funded by</span>
+              <a
+                href="https://arbitrum.foundation/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center"
+              >
+                <Image alt="Arbitrum Logo" src="/logo-arbitrum.svg" width={135} height={27} className="h-8 w-auto" />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="w-full">
-        <ul className="menu menu-horizontal w-full">
-          <div className="flex justify-center items-center gap-2 text-sm w-full">
-            <div className="text-center">
-              <a href="https://github.com/scaffold-eth/se-2" target="_blank" rel="noreferrer" className="link">
-                Fork me
-              </a>
-            </div>
-            <span>·</span>
-            <div className="flex justify-center items-center gap-2">
-              <p className="m-0 text-center">
-                Built with <HeartIcon className="inline-block h-4 w-4" /> at
-              </p>
-              <a
-                className="flex justify-center items-center gap-1"
-                href="https://buidlguidl.com/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <BuidlGuidlLogo className="w-3 h-5 pb-1" />
-                <span className="link">BuidlGuidl</span>
-              </a>
-            </div>
-            <span>·</span>
-            <div className="text-center">
-              <a href="https://t.me/joinchat/KByvmRe5wkR-8F_zz6AjpA" target="_blank" rel="noreferrer" className="link">
-                Support
-              </a>
-            </div>
-          </div>
-        </ul>
-      </div>
-    </div>
+    </footer>
   );
 };
