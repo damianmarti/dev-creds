@@ -7,7 +7,7 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
   return getMetadata({
     title: `${username} | DevCreds`,
     description: `View ${username}'s verified developer reputation, skills, and attestations on DevCreds.`,
-    imageRelativePath: `/builder/${username}/thumbnail.jpg`,
+    imageRelativePath: `/builder/${username}/og.png`,
   });
 }
 
