@@ -55,37 +55,207 @@ async function generateProfileOgImage(username: string) {
             border: "2px solid #0f172a",
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: "flex-start",
+            justifyContent: "flex-start",
             padding: "40px",
             shadow: "opacity-50 10px 10px 30px rgb(255 0 0 / 0.99)",
           },
         },
+
+        React.createElement(
+          "div",
+          {
+            style: {
+              fontSize: "24px",
+              fontWeight: "700",
+              color: "#FFFFFF",
+              fontFamily: "SpaceGroteskBold",
+              position: "absolute",
+              bottom: "10px",
+              left: "0px",
+              right: "0px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            },
+          },
+          "Get Your Verified Profile on",
+          React.createElement(
+            "span",
+            {
+              style: {
+                fontSize: "24px",
+                height: "34px",
+                width: "34px",
+                backgroundColor: "#0991B2",
+                borderRadius: "20%",
+                marginLeft: "15px",
+                marginRight: "10px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontWeight: "700",
+                color: "#FFFFFF",
+                textAlign: "center",
+                fontFamily: "SpaceGroteskBold",
+              },
+            },
+            "D",
+          ),
+          "DevCreds",
+        ),
+        React.createElement("img", {
+          style: {
+            width: "280px",
+            height: "280px",
+            borderRadius: "25%",
+            objectFit: "cover",
+          },
+          src: avatarUrl,
+        }),
         React.createElement(
           "span",
           {
             style: {
               fontSize: "48px",
-              fontWeight: "700",
-              color: "#666666",
-              textAlign: "center",
+              color: "#FFFFFF",
+              position: "absolute",
+              top: "35px",
+              left: "370px",
+              fontFamily: "SpaceGrotesk",
             },
           },
-          "Something is Cooking 🚀🚀🚀",
+          `@${developer.githubUser}`,
         ),
         React.createElement(
-          "span",
+          "div",
           {
             style: {
-              fontSize: "24px",
-              fontWeight: "400",
-              color: "#999999",
-              textAlign: "center",
-              marginTop: "20px",
-              fontFamily: "DMSans, sans-serif",
+              border: "1px solid #334155",
+              borderRadius: "10px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              position: "absolute",
+              top: "120px",
+              left: "370px",
+              right: "40px",
+              bottom: "180px",
             },
           },
-          "Stay tuned!",
+          // Metric 1: Cred Score
+          React.createElement(
+            "div",
+            {
+              style: {
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                flex: 1,
+                height: "100%",
+                borderRight: "1px solid #334155",
+              },
+            },
+            React.createElement(
+              "span",
+              {
+                style: {
+                  fontSize: "80px",
+                  color: "#FFFFFF",
+                  fontFamily: "SpaceGroteskBold",
+                },
+              },
+              developer.score,
+            ),
+            React.createElement(
+              "span",
+              {
+                style: {
+                  fontSize: "20px",
+                  color: "#0891b2",
+                  fontFamily: "SpaceGrotesk",
+                  marginTop: "6px",
+                },
+              },
+              "Cred Score",
+            ),
+          ),
+          // Metric 2: Attestations
+          React.createElement(
+            "div",
+            {
+              style: {
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                flex: 1,
+                height: "100%",
+                borderRight: "1px solid #334155",
+              },
+            },
+            React.createElement(
+              "span",
+              {
+                style: {
+                  fontSize: "80px",
+                  color: "#FFFFFF",
+                  fontFamily: "SpaceGroteskBold",
+                },
+              },
+              developer.attestationsCount,
+            ),
+            React.createElement(
+              "span",
+              {
+                style: {
+                  fontSize: "20px",
+                  color: "#0891b2",
+                  fontFamily: "SpaceGrotesk",
+                  marginTop: "6px",
+                },
+              },
+              "Attestations",
+            ),
+          ),
+          // Metric 3: Verified Attestations
+          React.createElement(
+            "div",
+            {
+              style: {
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                flex: 1,
+                height: "100%",
+              },
+            },
+            React.createElement(
+              "span",
+              {
+                style: {
+                  fontSize: "80px",
+                  color: "#FFFFFF",
+                  fontFamily: "SpaceGroteskBold",
+                },
+              },
+              developer.verifiedAttestationsCount,
+            ),
+            React.createElement(
+              "span",
+              {
+                style: {
+                  fontSize: "20px",
+                  color: "#0891b2",
+                  fontFamily: "SpaceGrotesk",
+                  marginTop: "6px",
+                },
+              },
+              "Verified Attestations",
+            ),
+          ),
         ),
       ),
     ),
