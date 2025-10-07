@@ -61,7 +61,7 @@ async function generateProfileOgImage(username: string) {
             shadow: "opacity-50 10px 10px 30px rgb(255 0 0 / 0.99)",
           },
         },
-
+        // DevCred logo + CTA
         React.createElement(
           "div",
           {
@@ -104,6 +104,7 @@ async function generateProfileOgImage(username: string) {
           ),
           "DevCreds",
         ),
+        // Profile Image
         React.createElement("img", {
           style: {
             width: "280px",
@@ -114,7 +115,7 @@ async function generateProfileOgImage(username: string) {
           src: avatarUrl,
         }),
         React.createElement(
-          "span",
+          "div",
           {
             style: {
               fontSize: "48px",
@@ -123,10 +124,48 @@ async function generateProfileOgImage(username: string) {
               top: "35px",
               left: "370px",
               fontFamily: "SpaceGrotesk",
+              display: "flex",
+              flexDirection: "column",
+              gap: "3px",
             },
           },
-          `@${developer.githubUser}`,
+          //`${developer.name || '@' + developer.githubUser}`,
+          React.createElement(
+            "span",
+            {
+              style: {
+                fontSize: "48px",
+                fontFamily: "SpaceGroteskBold",
+                color: "#FFFFFF",
+              },
+            },
+            `${developer.name || "@" + developer.githubUser}`,
+          ),
+          developer.name
+            ? React.createElement(
+                "span",
+                {
+                  style: {
+                    fontSize: "18px",
+                    color: "#FFFFFFA0",
+                    marginTop: "-5px",
+                  },
+                },
+                `@${developer.githubUser}`,
+              )
+            : null,
+          React.createElement(
+            "span",
+            {
+              style: {
+                fontSize: "20px",
+                color: "#FFFFFF",
+              },
+            },
+            `${developer.bio || ""}`,
+          ),
         ),
+        // Profile Scores
         React.createElement(
           "div",
           {
@@ -137,10 +176,10 @@ async function generateProfileOgImage(username: string) {
               alignItems: "center",
               justifyContent: "center",
               position: "absolute",
-              top: "120px",
+              top: "190px",
               left: "370px",
               right: "40px",
-              bottom: "180px",
+              bottom: "175px",
             },
           },
           // Metric 1: Cred Score
@@ -161,7 +200,7 @@ async function generateProfileOgImage(username: string) {
               "span",
               {
                 style: {
-                  fontSize: "80px",
+                  fontSize: "72px",
                   color: "#FFFFFF",
                   fontFamily: "SpaceGroteskBold",
                 },
@@ -175,7 +214,6 @@ async function generateProfileOgImage(username: string) {
                   fontSize: "20px",
                   color: "#0891b2",
                   fontFamily: "SpaceGrotesk",
-                  marginTop: "6px",
                 },
               },
               "Cred Score",
@@ -199,7 +237,7 @@ async function generateProfileOgImage(username: string) {
               "span",
               {
                 style: {
-                  fontSize: "80px",
+                  fontSize: "72px",
                   color: "#FFFFFF",
                   fontFamily: "SpaceGroteskBold",
                 },
@@ -213,7 +251,6 @@ async function generateProfileOgImage(username: string) {
                   fontSize: "20px",
                   color: "#0891b2",
                   fontFamily: "SpaceGrotesk",
-                  marginTop: "6px",
                 },
               },
               "Attestations",
@@ -236,7 +273,7 @@ async function generateProfileOgImage(username: string) {
               "span",
               {
                 style: {
-                  fontSize: "80px",
+                  fontSize: "72px",
                   color: "#FFFFFF",
                   fontFamily: "SpaceGroteskBold",
                 },
@@ -250,12 +287,70 @@ async function generateProfileOgImage(username: string) {
                   fontSize: "20px",
                   color: "#0891b2",
                   fontFamily: "SpaceGrotesk",
-                  marginTop: "6px",
                 },
               },
               "Verified Attestations",
             ),
           ),
+        ),
+        // Profile Skills
+        React.createElement(
+          "div",
+          {
+            style: {
+              display: "flex",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              rowGap: "20px",
+              columnGap: "30px",
+              justifyContent: "flex-start",
+              marginTop: "12px",
+              height: "120px",
+              overflow: "hidden",
+              fontFamily: "DMSansBold",
+              paddingTop: "10px",
+              paddingRight: "15px",
+            },
+          },
+          // sort by number of attestations
+          developer.skills.items
+            .sort((a, b) => b.score - a.score)
+            .map(skill => (
+              <div
+                key={skill.skill}
+                style={{
+                  backgroundColor: "#EC4899",
+                  color: "#FFFFFF",
+                  borderRadius: "5px",
+                  display: "flex",
+                  padding: "8px 20px",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontFamily: "DMSans",
+                  fontSize: "20px",
+                  position: "relative",
+                }}
+              >
+                {skill.skill}
+                <div
+                  style={{
+                    fontSize: "18px",
+                    backgroundColor: "#0891b2",
+                    borderRadius: "5px",
+                    padding: "2px 15px",
+                    color: "#FFFFFF",
+                    display: "flex",
+                    position: "absolute",
+                    fontFamily: "DMSansBold",
+                    top: "-10px",
+                    right: "-15px",
+                  }}
+                >
+                  {skill.score}
+                </div>
+              </div>
+            )),
         ),
       ),
     ),
@@ -281,6 +376,11 @@ async function generateProfileOgImage(username: string) {
         {
           name: "DMSans",
           data: await loadGoogleFont("DM+Sans:wght@400"),
+          style: "normal",
+        },
+        {
+          name: "DMSansBold",
+          data: await loadGoogleFont("DM+Sans:wght@700"),
           style: "normal",
         },
       ],
