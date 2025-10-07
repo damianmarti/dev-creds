@@ -28,8 +28,21 @@ async function loadData(username: string) {
 async function generateProfileOgImage(username: string) {
   const developer = await loadData(username);
   const avatarUrl = `https://github.com/${developer.githubUser}.png`;
-  const githubUrl = `https://github.com/${developer.githubUser}`;
-  console.log(username, developer, avatarUrl, githubUrl);
+
+  // define colors here
+  const colors = {
+    primary: "#0891b2",
+    secondary: "#ec4899",
+    accent: "#ec4899",
+    neutral: "#f1f5f9",
+    success: "#34eeb6",
+    warning: "#ffcf72",
+    error: "#be123c",
+    background: "#1e293b",
+    base200: "#334155",
+    base300: "#0f172a",
+  };
+
   return new ImageResponse(
     React.createElement(
       "div",
@@ -37,7 +50,7 @@ async function generateProfileOgImage(username: string) {
         style: {
           width: "1200px",
           height: "800px",
-          background: "#1E293B",
+          background: colors.background,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -50,15 +63,15 @@ async function generateProfileOgImage(username: string) {
           style: {
             width: "1100px",
             height: "500px",
-            background: "#1E293B",
+            background: colors.background,
             borderRadius: "15px",
-            border: "2px solid #0f172a",
+            border: `2px solid ${colors.base300}`,
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-start",
             justifyContent: "flex-start",
             padding: "40px",
-            shadow: "opacity-50 10px 10px 30px rgb(255 0 0 / 0.99)",
+            shadow: `opacity-50 10px 10px 30px ${colors.base300}`,
           },
         },
         // DevCred logo + CTA
@@ -68,7 +81,7 @@ async function generateProfileOgImage(username: string) {
             style: {
               fontSize: "24px",
               fontWeight: "700",
-              color: "#FFFFFF",
+              color: colors.neutral,
               fontFamily: "SpaceGroteskBold",
               position: "absolute",
               bottom: "10px",
@@ -87,7 +100,7 @@ async function generateProfileOgImage(username: string) {
                 fontSize: "24px",
                 height: "34px",
                 width: "34px",
-                backgroundColor: "#0991B2",
+                backgroundColor: colors.primary,
                 borderRadius: "20%",
                 marginLeft: "15px",
                 marginRight: "10px",
@@ -95,7 +108,7 @@ async function generateProfileOgImage(username: string) {
                 alignItems: "center",
                 justifyContent: "center",
                 fontWeight: "700",
-                color: "#FFFFFF",
+                color: colors.neutral,
                 textAlign: "center",
                 fontFamily: "SpaceGroteskBold",
               },
@@ -119,7 +132,7 @@ async function generateProfileOgImage(username: string) {
           {
             style: {
               fontSize: "48px",
-              color: "#FFFFFF",
+              color: colors.neutral,
               position: "absolute",
               top: "35px",
               left: "370px",
@@ -136,7 +149,7 @@ async function generateProfileOgImage(username: string) {
               style: {
                 fontSize: "48px",
                 fontFamily: "SpaceGroteskBold",
-                color: "#FFFFFF",
+                color: colors.neutral,
               },
             },
             `${developer.name || "@" + developer.githubUser}`,
@@ -147,7 +160,8 @@ async function generateProfileOgImage(username: string) {
                 {
                   style: {
                     fontSize: "18px",
-                    color: "#FFFFFFA0",
+                    color: colors.neutral,
+                    opacity: "70%",
                     marginTop: "-5px",
                   },
                 },
@@ -159,7 +173,7 @@ async function generateProfileOgImage(username: string) {
             {
               style: {
                 fontSize: "20px",
-                color: "#FFFFFF",
+                color: colors.neutral,
               },
             },
             `${developer.bio || ""}`,
@@ -170,7 +184,7 @@ async function generateProfileOgImage(username: string) {
           "div",
           {
             style: {
-              border: "1px solid #334155",
+              border: `1px solid ${colors.base200}`,
               borderRadius: "10px",
               display: "flex",
               alignItems: "center",
@@ -193,7 +207,7 @@ async function generateProfileOgImage(username: string) {
                 justifyContent: "center",
                 flex: 1,
                 height: "100%",
-                borderRight: "1px solid #334155",
+                borderRight: `1px solid ${colors.base200}`,
               },
             },
             React.createElement(
@@ -201,7 +215,7 @@ async function generateProfileOgImage(username: string) {
               {
                 style: {
                   fontSize: "72px",
-                  color: "#FFFFFF",
+                  color: colors.neutral,
                   fontFamily: "SpaceGroteskBold",
                 },
               },
@@ -212,7 +226,7 @@ async function generateProfileOgImage(username: string) {
               {
                 style: {
                   fontSize: "20px",
-                  color: "#0891b2",
+                  color: colors.primary,
                   fontFamily: "SpaceGrotesk",
                 },
               },
@@ -238,7 +252,7 @@ async function generateProfileOgImage(username: string) {
               {
                 style: {
                   fontSize: "72px",
-                  color: "#FFFFFF",
+                  color: colors.neutral,
                   fontFamily: "SpaceGroteskBold",
                 },
               },
@@ -249,7 +263,7 @@ async function generateProfileOgImage(username: string) {
               {
                 style: {
                   fontSize: "20px",
-                  color: "#0891b2",
+                  color: colors.primary,
                   fontFamily: "SpaceGrotesk",
                 },
               },
@@ -274,7 +288,7 @@ async function generateProfileOgImage(username: string) {
               {
                 style: {
                   fontSize: "72px",
-                  color: "#FFFFFF",
+                  color: colors.neutral,
                   fontFamily: "SpaceGroteskBold",
                 },
               },
@@ -285,7 +299,7 @@ async function generateProfileOgImage(username: string) {
               {
                 style: {
                   fontSize: "20px",
-                  color: "#0891b2",
+                  color: colors.primary,
                   fontFamily: "SpaceGrotesk",
                 },
               },
@@ -319,8 +333,8 @@ async function generateProfileOgImage(username: string) {
               <div
                 key={skill.skill}
                 style={{
-                  backgroundColor: "#EC4899",
-                  color: "#FFFFFF",
+                  backgroundColor: colors.secondary,
+                  color: colors.neutral,
                   borderRadius: "5px",
                   display: "flex",
                   padding: "8px 20px",
@@ -336,10 +350,10 @@ async function generateProfileOgImage(username: string) {
                 <div
                   style={{
                     fontSize: "18px",
-                    backgroundColor: "#0891b2",
+                    backgroundColor: colors.primary,
                     borderRadius: "5px",
                     padding: "2px 15px",
-                    color: "#FFFFFF",
+                    color: colors.neutral,
                     display: "flex",
                     position: "absolute",
                     fontFamily: "DMSansBold",
