@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { DeveloperForTable } from "./BuildersTable";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
@@ -33,27 +32,6 @@ function normalizeSkills(skills: string[]) {
   return Array.from(normalizedMap.entries())
     .sort((left, right) => left[1].localeCompare(right[1]))
     .map(([key, label]) => ({ key, label }));
-}
-
-export function filterDevelopers(
-  developers: DeveloperForTable[],
-  selectedSkillKeys: string[],
-  usernameSubstring: string,
-) {
-  const hasSkillFilter = selectedSkillKeys.length > 0;
-  const normalizedSelected = new Set(selectedSkillKeys.map(normalizeSkill));
-  const normalizedUsernameSubstring = usernameSubstring.trim().toLowerCase();
-
-  return developers.filter(developer => {
-    const usernameMatches =
-      normalizedUsernameSubstring.length === 0 ||
-      developer.username.toLowerCase().includes(normalizedUsernameSubstring);
-
-    const skillsMatch =
-      !hasSkillFilter || developer.skills.some(skill => normalizedSelected.has(normalizeSkill(skill)));
-
-    return usernameMatches && skillsMatch;
-  });
 }
 
 export function BuildersFilter({
