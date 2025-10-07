@@ -181,6 +181,21 @@ async function generateProfileOgImage(username: string) {
         ),
         // Profile Scores
         React.createElement(
+          // "div",
+          // {
+          //   style: {
+          //     border: `1px solid ${colors.base200}`,
+          //     borderRadius: "10px",
+          //     display: "flex",
+          //     alignItems: "center",
+          //     justifyContent: "center",
+          //     position: "absolute",
+          //     top: "190px", // 190px for the profile image
+          //     left: "370px",
+          //     right: "40px",
+          //     bottom: "175px",
+          //   },
+          // },
           "div",
           {
             style: {
@@ -190,10 +205,10 @@ async function generateProfileOgImage(username: string) {
               alignItems: "center",
               justifyContent: "center",
               position: "absolute",
-              top: "190px",
-              left: "370px",
+              top: "40px", // 190px for the profile image
+              left: "900px",
               right: "40px",
-              bottom: "175px",
+              bottom: "325px",
             },
           },
           // Metric 1: Cred Score
@@ -233,79 +248,79 @@ async function generateProfileOgImage(username: string) {
               "Cred Score",
             ),
           ),
-          // Metric 2: Attestations
-          React.createElement(
-            "div",
-            {
-              style: {
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                flex: 1,
-                height: "100%",
-                borderRight: "1px solid #334155",
-              },
-            },
-            React.createElement(
-              "span",
-              {
-                style: {
-                  fontSize: "72px",
-                  color: colors.neutral,
-                  fontFamily: "SpaceGroteskBold",
-                },
-              },
-              developer.attestationsCount,
-            ),
-            React.createElement(
-              "span",
-              {
-                style: {
-                  fontSize: "20px",
-                  color: colors.primary,
-                  fontFamily: "SpaceGrotesk",
-                },
-              },
-              "Attestations",
-            ),
-          ),
-          // Metric 3: Verified Attestations
-          React.createElement(
-            "div",
-            {
-              style: {
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                flex: 1,
-                height: "100%",
-              },
-            },
-            React.createElement(
-              "span",
-              {
-                style: {
-                  fontSize: "72px",
-                  color: colors.neutral,
-                  fontFamily: "SpaceGroteskBold",
-                },
-              },
-              developer.verifiedAttestationsCount,
-            ),
-            React.createElement(
-              "span",
-              {
-                style: {
-                  fontSize: "20px",
-                  color: colors.primary,
-                  fontFamily: "SpaceGrotesk",
-                },
-              },
-              "Verified Attestations",
-            ),
-          ),
+          // // Metric 2: Attestations
+          // React.createElement(
+          //   "div",
+          //   {
+          //     style: {
+          //       display: "flex",
+          //       flexDirection: "column",
+          //       alignItems: "center",
+          //       justifyContent: "center",
+          //       flex: 1,
+          //       height: "100%",
+          //       borderRight: "1px solid #334155",
+          //     },
+          //   },
+          //   React.createElement(
+          //     "span",
+          //     {
+          //       style: {
+          //         fontSize: "72px",
+          //         color: colors.neutral,
+          //         fontFamily: "SpaceGroteskBold",
+          //       },
+          //     },
+          //     developer.attestationsCount,
+          //   ),
+          //   React.createElement(
+          //     "span",
+          //     {
+          //       style: {
+          //         fontSize: "20px",
+          //         color: colors.primary,
+          //         fontFamily: "SpaceGrotesk",
+          //       },
+          //     },
+          //     "Attestations",
+          //   ),
+          // ),
+          // // Metric 3: Verified Attestations
+          // React.createElement(
+          //   "div",
+          //   {
+          //     style: {
+          //       display: "flex",
+          //       flexDirection: "column",
+          //       alignItems: "center",
+          //       justifyContent: "center",
+          //       flex: 1,
+          //       height: "100%",
+          //     },
+          //   },
+          //   React.createElement(
+          //     "span",
+          //     {
+          //       style: {
+          //         fontSize: "72px",
+          //         color: colors.neutral,
+          //         fontFamily: "SpaceGroteskBold",
+          //       },
+          //     },
+          //     developer.verifiedAttestationsCount,
+          //   ),
+          //   React.createElement(
+          //     "span",
+          //     {
+          //       style: {
+          //         fontSize: "20px",
+          //         color: colors.primary,
+          //         fontFamily: "SpaceGrotesk",
+          //       },
+          //     },
+          //     "Verified Attestations",
+          //   ),
+          //),
         ),
         // Profile Skills
         React.createElement(
