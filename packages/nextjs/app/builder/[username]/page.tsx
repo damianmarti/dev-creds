@@ -5,7 +5,7 @@ import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
 export async function generateMetadata({ params }: { params: Promise<{ username: string }> }): Promise<Metadata> {
   const { username } = await params;
   return getMetadata({
-    title: `${username} | DevCreds`,
+    title: `${username} Developer Attested Skills`,
     description: `View ${username}'s verified developer reputation, skills, and attestations on DevCreds.`,
     imageRelativePath: `/builder/${username}/og.png`,
   });
