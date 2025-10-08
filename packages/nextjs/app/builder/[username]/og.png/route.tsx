@@ -79,12 +79,12 @@ async function generateProfileOgImage(username: string) {
           "div",
           {
             style: {
-              fontSize: "32px",
+              fontSize: "40px",
               fontWeight: "700",
               color: colors.neutral,
               fontFamily: "SpaceGroteskBold",
               position: "absolute",
-              bottom: "-50px",
+              bottom: "-52px",
               left: "0px",
               right: "0px",
               display: "flex",
@@ -97,7 +97,7 @@ async function generateProfileOgImage(username: string) {
             "span",
             {
               style: {
-                fontSize: "32px",
+                fontSize: "36px",
                 height: "42px",
                 width: "42px",
                 backgroundColor: colors.primary,
@@ -120,9 +120,9 @@ async function generateProfileOgImage(username: string) {
         // Profile Image
         React.createElement("img", {
           style: {
-            width: "220px",
-            height: "220px",
-            borderRadius: "25%",
+            width: "200px",
+            height: "200px",
+            borderRadius: "40px",
             objectFit: "cover",
           },
           src: avatarUrl,
@@ -131,12 +131,14 @@ async function generateProfileOgImage(username: string) {
           "div",
           {
             style: {
-              fontSize: "48px",
+              fontSize: "60px",
               color: colors.neutral,
               position: "absolute",
               top: "35px",
-              left: "300px",
-              right: "210px",
+              left: "260px",
+              right: "260px",
+              height: "200px",
+              overflow: "hidden",
               fontFamily: "SpaceGrotesk",
               display: "flex",
               flexDirection: "column",
@@ -148,7 +150,7 @@ async function generateProfileOgImage(username: string) {
             "span",
             {
               style: {
-                fontSize: "48px",
+                fontSize: "60px",
                 fontFamily: "SpaceGroteskBold",
                 color: colors.neutral,
               },
@@ -160,8 +162,9 @@ async function generateProfileOgImage(username: string) {
                 "span",
                 {
                   style: {
-                    fontSize: "18px",
+                    fontSize: "24px",
                     color: colors.primary,
+                    fontFamily: "SpaceGroteskBold",
                     opacity: "70%",
                     marginTop: "-5px",
                   },
@@ -173,7 +176,7 @@ async function generateProfileOgImage(username: string) {
             "span",
             {
               style: {
-                fontSize: "20px",
+                fontSize: "24px",
                 color: colors.neutral,
               },
             },
@@ -182,34 +185,20 @@ async function generateProfileOgImage(username: string) {
         ),
         // Profile Scores
         React.createElement(
-          // "div",
-          // {
-          //   style: {
-          //     border: `1px solid ${colors.base200}`,
-          //     borderRadius: "10px",
-          //     display: "flex",
-          //     alignItems: "center",
-          //     justifyContent: "center",
-          //     position: "absolute",
-          //     top: "190px", // 190px for the profile image
-          //     left: "370px",
-          //     right: "40px",
-          //     bottom: "175px",
-          //   },
-          // },
           "div",
           {
             style: {
               border: `1px solid ${colors.base200}`,
-              borderRadius: "10px",
+              borderRadius: "40px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               position: "absolute",
               top: "40px", // 190px for the profile image
-              left: "900px",
               right: "40px",
-              bottom: "325px",
+              width: "200px",
+              height: "200px",
+              backgroundColor: colors.primary,
             },
           },
           // Metric 1: Cred Score
@@ -230,7 +219,7 @@ async function generateProfileOgImage(username: string) {
               "span",
               {
                 style: {
-                  fontSize: "72px",
+                  fontSize: "100px",
                   color: colors.neutral,
                   fontFamily: "SpaceGroteskBold",
                 },
@@ -241,9 +230,9 @@ async function generateProfileOgImage(username: string) {
               "span",
               {
                 style: {
-                  fontSize: "20px",
-                  color: colors.primary,
-                  fontFamily: "SpaceGrotesk",
+                  fontSize: "24px",
+                  color: colors.neutral,
+                  fontFamily: "SpaceGroteskBold",
                 },
               },
               "Cred Score",
@@ -265,8 +254,8 @@ async function generateProfileOgImage(username: string) {
               height: "200px",
               overflow: "hidden",
               fontFamily: "DMSansBold",
-              paddingTop: "10px",
-              paddingRight: "15px",
+              paddingTop: "15px",
+              paddingRight: "20px",
             },
           },
           // sort by number of attestations
@@ -285,14 +274,14 @@ async function generateProfileOgImage(username: string) {
                   alignItems: "center",
                   justifyContent: "center",
                   fontFamily: "DMSans",
-                  fontSize: "20px",
+                  fontSize: "30px",
                   position: "relative",
                 }}
               >
                 {skill.skill}
                 <div
                   style={{
-                    fontSize: "18px",
+                    fontSize: "24px",
                     backgroundColor: colors.primary,
                     borderRadius: "5px",
                     padding: "2px 15px",
@@ -300,8 +289,8 @@ async function generateProfileOgImage(username: string) {
                     display: "flex",
                     position: "absolute",
                     fontFamily: "DMSansBold",
-                    top: "-10px",
-                    right: "-15px",
+                    top: "-15px",
+                    right: "-20px",
                   }}
                 >
                   {skill.score}
