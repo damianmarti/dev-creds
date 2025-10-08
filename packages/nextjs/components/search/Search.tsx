@@ -1,149 +1,76 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { ArrowRightCircleIcon, MagnifyingGlassIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import { useDebounced } from "~~/hooks";
 import { searchDevelopers } from "~~/utils/graphql";
 
 export const Search = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [hasSearched, setHasSearched] = useState(false);
+  const router = useRouter();
+  const [term, setTerm] = useState("");
+  const debounced = useDebounced(term.trim(), 400);
 
-  const {
-    data: searchResults,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["searchDevelopers", searchTerm],
-    queryFn: () => searchDevelopers(searchTerm),
-    enabled: hasSearched && searchTerm.length > 0,
+  const { data, isFetching, isError } = useQuery({
+    queryKey: ["searchDevelopers", debounced],
+    queryFn: () => searchDevelopers(debounced),
+    enabled: debounced.length > 0,
+    staleTime: 30_000,
   });
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      setHasSearched(true);
+  const exactMatch = useMemo(() => {
+    if (!data?.developers?.items?.length || !debounced) return null;
+    const lower = debounced.toLowerCase();
+    return data.developers.items.find((d: { githubUser: string }) => d.githubUser?.toLowerCase() === lower) ?? null;
+  }, [data, debounced]);
+
+  const showMagnifier = !debounced || isFetching;
+  const showArrow = !!exactMatch && !isFetching;
+  const showCross = debounced.length > 0 && !isFetching && !exactMatch;
+
+  const goToBuilder = () => {
+    if (exactMatch) router.push(`/builder/${exactMatch.githubUser}`);
+  };
+
+  const onKeyDown: React.KeyboardEventHandler<HTMLInputElement> = e => {
+    if (e.key === "Enter" && exactMatch) {
+      e.preventDefault();
+      goToBuilder();
     }
   };
 
-  const resetSearch = () => {
-    setSearchTerm("");
-    setHasSearched(false);
-  };
-
   return (
-    <div className="max-w-4xl mx-auto">
-      {/* Search Form */}
-      <form onSubmit={handleSearch} className="mb-8">
-        <div className="flex gap-4 items-center">
-          <div className="flex-1 relative">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              placeholder="Enter GitHub username..."
-              className="input input-bordered w-full pr-12"
-            />
-            <MagnifyingGlassIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-          </div>
-          <button type="submit" disabled={!searchTerm.trim() || isLoading} className="btn btn-primary">
-            {isLoading ? <span className="loading loading-spinner loading-sm"></span> : "Search"}
-          </button>
-          {hasSearched && (
-            <button type="button" onClick={resetSearch} className="btn btn-ghost">
-              Clear
+    <div className="max-w-xl mx-auto">
+      <div className="relative">
+        <input
+          type="text"
+          value={term}
+          onChange={e => setTerm(e.target.value)}
+          onKeyDown={onKeyDown}
+          placeholder="Search GitHub username….."
+          className="input input-sm w-full pr-20"
+          aria-label="Search GitHub username"
+        />
+
+        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+          {showMagnifier && <MagnifyingGlassIcon className="w-3 h-3 text-base-content/60" />}
+          {showArrow && (
+            <button
+              type="button"
+              onClick={goToBuilder}
+              className="p-0 m-0"
+              aria-label={`Go to ${exactMatch.githubUser}`}
+              title={`Go to ${exactMatch.githubUser}`}
+            >
+              <ArrowRightCircleIcon className="w-3 h-3 text-primary hover:opacity-80" />
             </button>
           )}
-        </div>
-      </form>
-
-      {/* Search Results */}
-      {hasSearched && (
-        <div className="bg-base-200 rounded-lg p-6">
-          {error && (
-            <div className="alert alert-error mb-4">
-              <div>
-                <h3 className="font-bold">Search Error</h3>
-                <div className="text-xs">
-                  Failed to search developers. Make sure Ponder is running on localhost:42069
-                </div>
-              </div>
-            </div>
-          )}
-
-          {isLoading && (
-            <div className="flex justify-center items-center py-8">
-              <span className="loading loading-spinner loading-lg"></span>
-              <span className="ml-2">Searching developers...</span>
-            </div>
-          )}
-
-          {!isLoading && !error && searchResults && (
-            <>
-              <div className="mb-4">
-                <h2 className="text-2xl font-bold">Search Results for &quot;{searchTerm}&quot;</h2>
-                <p className="text-sm text-base-content/70">
-                  Found {searchResults.developers.items.length} developer(s)
-                </p>
-              </div>
-
-              {searchResults.developers.items.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-lg text-base-content/70">
-                    No developers found with GitHub username containing &quot;{searchTerm}&quot;
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  {searchResults.developers.items.map(developer => (
-                    <div key={developer.githubUser} className="bg-base-100 rounded-lg p-6 shadow-lg">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-xl font-bold">
-                          <a
-                            href={`https://github.com/${developer.githubUser}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-primary hover:underline"
-                          >
-                            @{developer.githubUser}
-                          </a>
-                        </h3>
-                        <a
-                          href={`/attestations/${developer.githubUser}`}
-                          className="text-sm text-secondary hover:underline"
-                        >
-                          {developer.attestations.items.length} attestation(s)
-                        </a>
-                      </div>
-
-                      {/* Skills */}
-                      {developer.skills.items.length > 0 && (
-                        <div className="mb-4">
-                          <h4 className="font-semibold mb-2">Skills:</h4>
-                          <div className="flex flex-wrap gap-2">
-                            {developer.skills.items
-                              .sort((a, b) => b.count - a.count)
-                              .map((skillData, index) => (
-                                <div
-                                  key={index}
-                                  className="badge badge-primary badge-lg"
-                                  title={`Score: ${skillData.score}, Attestations: ${skillData.count}`}
-                                >
-                                  {skillData.skill}
-                                  <span className="ml-1 text-xs opacity-70">({skillData.count})</span>
-                                </div>
-                              ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
+          {showCross && (
+            <XCircleIcon className={`w-3 h-3 text-error`} title={isError ? "Search error" : "No exact match"} />
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
