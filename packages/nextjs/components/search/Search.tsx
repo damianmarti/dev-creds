@@ -48,9 +48,8 @@ export const Search = () => {
           value={term}
           onChange={e => setTerm(e.target.value)}
           onKeyDown={onKeyDown}
-          placeholder="Search GitHub username….."
+          placeholder="Search username "
           className="input input-sm w-full pr-20"
-          aria-label="Search GitHub username"
         />
 
         <div className="absolute right-3 top-1/2 -translate-y-1/2">
