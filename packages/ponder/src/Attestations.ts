@@ -196,7 +196,7 @@ ponder.on("EAS:Attested", async ({ event, context }) => {
                 }
                 await context.db.insert(developerSkill).values({
                     githubUser: githubUser,
-                    skill: skill,
+                    skill: skill.toLowerCase(),
                     count: 1,
                     verifiedCount: verifiedCount,
                     collaboratorCount: collaboratorCount,
