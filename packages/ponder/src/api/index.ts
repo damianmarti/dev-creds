@@ -1,5 +1,5 @@
 import { ponder } from "ponder:registry";
-import { graphql, count, sql, gte, eq, and, like } from "ponder";
+import { graphql, count, sql, eq, and, like } from "ponder";
 import { developer, developerSkill } from "ponder:schema";
 
 ponder.use("/", graphql());
