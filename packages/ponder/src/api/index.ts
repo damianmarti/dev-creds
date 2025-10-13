@@ -98,21 +98,21 @@ ponder.get("/builders", async (c) => {
       .limit(limit)
       .offset(offset);
 
-    // Fetch all skills for each developer
-    const githubUsers = developersWithScore.map((d) => d.githubUser);
-    const allSkills =
-      githubUsers.length > 0
-        ? await c.db
-            .select()
-            .from(developerSkill)
-            .where(
-              sql`${developerSkill.githubUser} IN (${sql.join(
-                githubUsers.map((user) => sql`${user}`),
-                sql`, `
-              )})`
-            )
-            .orderBy(developerSkill.score)
-        : [];
+     // Fetch all skills for each developer
+     const githubUsers = developersWithScore.map((d) => d.githubUser);
+     const allSkills =
+       githubUsers.length > 0
+         ? await c.db
+             .select()
+             .from(developerSkill)
+             .where(
+               sql`${developerSkill.githubUser} IN (${sql.join(
+                 githubUsers.map((user) => sql`${user}`),
+                 sql`, `
+               )})`
+             )
+             .orderBy(sql`${developerSkill.score} DESC`)
+         : [];
 
     // Group skills by developer
     const skillsByDeveloper: Record<string, typeof allSkills> = {};
@@ -153,21 +153,21 @@ ponder.get("/builders", async (c) => {
           orderBy: (developer, { desc }) => [desc(developer.score)],
         });
 
-    // Fetch all skills for each developer
-    const githubUsers = developersData.map((d) => d.githubUser);
-    const allSkills =
-      githubUsers.length > 0
-        ? await c.db
-            .select()
-            .from(developerSkill)
-            .where(
-              sql`${developerSkill.githubUser} IN (${sql.join(
-                githubUsers.map((user) => sql`${user}`),
-                sql`, `
-              )})`
-            )
-            .orderBy(developerSkill.score)
-        : [];
+     // Fetch all skills for each developer
+     const githubUsers = developersData.map((d) => d.githubUser);
+     const allSkills =
+       githubUsers.length > 0
+         ? await c.db
+             .select()
+             .from(developerSkill)
+             .where(
+               sql`${developerSkill.githubUser} IN (${sql.join(
+                 githubUsers.map((user) => sql`${user}`),
+                 sql`, `
+               )})`
+             )
+             .orderBy(sql`${developerSkill.score} DESC`)
+         : [];
 
     // Group skills by developer
     const skillsByDeveloper: Record<string, typeof allSkills> = {};
