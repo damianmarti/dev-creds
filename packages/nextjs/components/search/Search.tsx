@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { CheckIcon, MagnifyingGlassIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useDebounced } from "~~/hooks";
 import { searchDevelopers } from "~~/utils/graphql";
 
@@ -38,12 +38,6 @@ export const Search = () => {
     return items.find(d => d.githubUser?.toLowerCase() === lower) ?? null;
   }, [items, debounced]);
 
-  const nothingFound = debounced.length > 0 && !isFetching && items.length === 0;
-
-  const showMagnifier = !debounced || isFetching;
-  const showCheck = !!exactMatch && !isFetching;
-  const showCross = debounced.length > 0 && !isFetching && !exactMatch;
-
   const goToBuilder = (username?: string) => {
     const u = username ?? exactMatch?.githubUser;
     if (u) router.push(`/builder/${u}`);
@@ -77,7 +71,7 @@ export const Search = () => {
   const onBlur = () => setTimeout(() => setOpen(false), 100);
 
   return (
-    <div className="max-w-xl mx-auto relative">
+    <div className="max-w-xl mx-auto relative ml-4">
       <div className="relative">
         <input
           ref={inputRef}
@@ -97,43 +91,19 @@ export const Search = () => {
         />
 
         <div className="absolute right-3 top-1/2 -translate-y-1/2">
-          {showMagnifier && <MagnifyingGlassIcon className="w-4 h-4 text-base-content/60" />}
-          {showCheck && (
-            <CheckIcon
-              className="w-5 h-5 text-primary hover:opacity-80"
-              onMouseDown={e => e.preventDefault()}
-              onClick={() => goToBuilder()}
-            />
-          )}
-          {showCross && (
-            <XCircleIcon className="w-4 h-4 text-error" title={isError ? "Search error" : "No exact match"} />
-          )}
+          <MagnifyingGlassIcon className="w-4 h-4 text-base-content/60" />
         </div>
       </div>
 
-      {/* Helper line */}
-      {debounced !== "" && (
-        <div className="text-[11px] text-base-content/70 mt-1 ml-1">
-          {isError
-            ? "Search failed. Is Ponder on :42069?"
-            : isFetching
-              ? "Searching…"
-              : nothingFound
-                ? `No developers found for “${debounced}”`
-                : `${items.length} result${items.length !== 1 ? "s" : ""} found`}
-        </div>
-      )}
-
-      {/* Dropdown */}
-      {open && (debounced === "" || items.length > 0) && (
+      {open && debounced !== "" && (
         <ul
           role="listbox"
           className="menu menu-sm dropdown-content bg-base-100 rounded-box shadow-lg absolute z-10 mt-1 w-full border border-base-300"
           onMouseDown={e => e.preventDefault()}
         >
-          {debounced === "" && (
+          {items.length === 0 && !isFetching && !isError && (
             <li className="menu-title text-xs text-base-content/60 px-3 py-2">
-              <span>Type a GitHub username</span>
+              <span>No developers found</span>
             </li>
           )}
 
