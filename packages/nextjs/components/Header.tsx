@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SwitchTheme } from "./SwitchTheme";
+import { Search } from "./search/Search";
 import { hardhat } from "viem/chains";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
@@ -31,10 +32,6 @@ export const menuLinks: HeaderMenuLink[] = [
   {
     label: "Attestations",
     href: "/attestations",
-  },
-  {
-    label: "Search",
-    href: "/search",
   },
 ];
 
@@ -100,6 +97,7 @@ export const Header = () => {
         </Link>
         <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">
           <HeaderMenuLinks />
+          <Search />
         </ul>
       </div>
       <div className="navbar-end grow mr-4">

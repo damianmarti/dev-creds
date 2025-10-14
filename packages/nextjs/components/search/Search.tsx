@@ -1,148 +1,131 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { useDebounced } from "~~/hooks";
 import { searchDevelopers } from "~~/utils/graphql";
 
-export const Search = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [hasSearched, setHasSearched] = useState(false);
+type DevItem = {
+  githubUser: string;
+  skills?: { items: { skill: string; count: number; score: number }[] };
+  attestations?: { items: { id: string }[] };
+};
 
-  const {
-    data: searchResults,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["searchDevelopers", searchTerm],
-    queryFn: () => searchDevelopers(searchTerm),
-    enabled: hasSearched && searchTerm.length > 0,
+const LIMIT = 8;
+
+export const Search = () => {
+  const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [term, setTerm] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const debounced = useDebounced(term.trim().replace(/^@+/, ""), 400);
+
+  const { data, isFetching, isError } = useQuery({
+    queryKey: ["searchDevelopers", debounced],
+    queryFn: () => searchDevelopers(debounced),
+    enabled: debounced.length > 0,
+    staleTime: 30_000,
   });
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      setHasSearched(true);
+  const items: DevItem[] = useMemo(() => (data?.developers?.items ?? []).slice(0, LIMIT), [data]);
+
+  const exactMatch = useMemo(() => {
+    if (!items.length || !debounced) return null;
+    const lower = debounced.toLowerCase();
+    return items.find(d => d.githubUser?.toLowerCase() === lower) ?? null;
+  }, [items, debounced]);
+
+  const goToBuilder = (username?: string) => {
+    const u = username ?? exactMatch?.githubUser;
+    if (u) router.push(`/builder/${u}`);
+  };
+
+  const onKeyDown: React.KeyboardEventHandler<HTMLInputElement> = e => {
+    if (!open && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+      setOpen(true);
+      return;
+    }
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (exactMatch) {
+        goToBuilder();
+        setOpen(false);
+        setTerm("");
+        return;
+      }
+      if (items.length > 0) {
+        goToBuilder(items[0].githubUser);
+        setOpen(false);
+        setTerm("");
+      }
+    }
+    if (e.key === "Escape") {
+      setOpen(false);
+      inputRef.current?.blur();
     }
   };
 
-  const resetSearch = () => {
-    setSearchTerm("");
-    setHasSearched(false);
-  };
+  const onBlur = () => setTimeout(() => setOpen(false), 100);
 
   return (
-    <div className="max-w-4xl mx-auto">
-      {/* Search Form */}
-      <form onSubmit={handleSearch} className="mb-8">
-        <div className="flex gap-4 items-center">
-          <div className="flex-1 relative">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              placeholder="Enter GitHub username..."
-              className="input input-bordered w-full pr-12"
-            />
-            <MagnifyingGlassIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-          </div>
-          <button type="submit" disabled={!searchTerm.trim() || isLoading} className="btn btn-primary">
-            {isLoading ? <span className="loading loading-spinner loading-sm"></span> : "Search"}
-          </button>
-          {hasSearched && (
-            <button type="button" onClick={resetSearch} className="btn btn-ghost">
-              Clear
-            </button>
-          )}
+    <div className="max-w-xl mx-auto relative ml-4">
+      <div className="relative">
+        <input
+          ref={inputRef}
+          type="text"
+          value={term}
+          onChange={e => {
+            setTerm(e.target.value);
+            setOpen(true);
+          }}
+          onFocus={() => setOpen(true)}
+          onBlur={onBlur}
+          onKeyDown={onKeyDown}
+          placeholder="Search username"
+          className="input input-sm w-full pr-20"
+          aria-haspopup="listbox"
+          autoComplete="off"
+        />
+
+        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+          <MagnifyingGlassIcon className="w-4 h-4 text-base-content/60" />
         </div>
-      </form>
+      </div>
 
-      {/* Search Results */}
-      {hasSearched && (
-        <div className="bg-base-200 rounded-lg p-6">
-          {error && (
-            <div className="alert alert-error mb-4">
-              <div>
-                <h3 className="font-bold">Search Error</h3>
-                <div className="text-xs">
-                  Failed to search developers. Make sure Ponder is running on localhost:42069
-                </div>
-              </div>
-            </div>
+      {open && debounced !== "" && (
+        <ul
+          role="listbox"
+          className="menu menu-sm dropdown-content bg-base-100 rounded-box shadow-lg absolute z-10 mt-1 w-full border border-base-300"
+          onMouseDown={e => e.preventDefault()}
+        >
+          {items.length === 0 && !isFetching && !isError && (
+            <li className="menu-title text-xs text-base-content/60 px-3 py-2">
+              <span>No developers found</span>
+            </li>
           )}
 
-          {isLoading && (
-            <div className="flex justify-center items-center py-8">
-              <span className="loading loading-spinner loading-lg"></span>
-              <span className="ml-2">Searching developers...</span>
-            </div>
-          )}
-
-          {!isLoading && !error && searchResults && (
-            <>
-              <div className="mb-4">
-                <h2 className="text-2xl font-bold">Search Results for &quot;{searchTerm}&quot;</h2>
-                <p className="text-sm text-base-content/70">
-                  Found {searchResults.developers.items.length} developer(s)
-                </p>
-              </div>
-
-              {searchResults.developers.items.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-lg text-base-content/70">
-                    No developers found with GitHub username containing &quot;{searchTerm}&quot;
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  {searchResults.developers.items.map(developer => (
-                    <div key={developer.githubUser} className="bg-base-100 rounded-lg p-6 shadow-lg">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-xl font-bold">
-                          <a
-                            href={`https://github.com/${developer.githubUser}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-primary hover:underline"
-                          >
-                            @{developer.githubUser}
-                          </a>
-                        </h3>
-                        <a
-                          href={`/attestations/${developer.githubUser}`}
-                          className="text-sm text-secondary hover:underline"
-                        >
-                          {developer.attestations.items.length} attestation(s)
-                        </a>
-                      </div>
-
-                      {/* Skills */}
-                      {developer.skills.items.length > 0 && (
-                        <div className="mb-4">
-                          <h4 className="font-semibold mb-2">Skills:</h4>
-                          <div className="flex flex-wrap gap-2">
-                            {developer.skills.items
-                              .sort((a, b) => b.count - a.count)
-                              .map((skillData, index) => (
-                                <div
-                                  key={index}
-                                  className="badge badge-primary badge-lg"
-                                  title={`Score: ${skillData.score}, Attestations: ${skillData.count}`}
-                                >
-                                  {skillData.skill}
-                                  <span className="ml-1 text-xs opacity-70">({skillData.count})</span>
-                                </div>
-                              ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-        </div>
+          {items.map((dev, i) => {
+            return (
+              <li key={`${dev.githubUser}-${i}`}>
+                <button
+                  type="button"
+                  className="text-left w-full hover:bg-base-200"
+                  onClick={() => {
+                    goToBuilder(dev.githubUser);
+                    setOpen(false);
+                  }}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono">@{dev.githubUser}</span>
+                  </div>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
       )}
     </div>
   );
