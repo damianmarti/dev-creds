@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import { Address } from "../scaffold-eth";
+import { CheckCircleIcon, UsersIcon } from "@heroicons/react/24/outline";
 import { Attestation, Developer } from "~~/types";
 
 function AttestationCard({ attestation }: { attestation: Attestation }) {
@@ -7,21 +8,16 @@ function AttestationCard({ attestation }: { attestation: Attestation }) {
     <div className="relative border-l-2 border-primary/20 pl-4 space-y-3">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="avatar">
-            <div className="mask mask-squircle h-10 w-10 bg-base-200"></div>
-          </div>
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-              <span className="font-medium text-base-content">(placeholderforcompute)</span>
-              {attestation.verified && (
-                <div className="badge badge-outline badge-success badge-sm">
-                  <CheckCircleIcon className="mr-1 h-3 w-3" />
-                  Verified
+              <Address address={attestation.attester} size="base" onlyEnsOrAddress />
+              {attestation.evidencesCollaborator.some(collaborator => collaborator === true) && (
+                <div className="tooltip" data-tip="Collaborator">
+                  <div className="badge badge-outline badge-primary badge-sm">
+                    <UsersIcon className="mr-1 h-4 w-4" />
+                  </div>
                 </div>
               )}
-            </div>
-            <div className="flex items-center gap-2 text-xs sm:text-sm text-base-content/70">
-              <span>@{attestation.attester}</span>
             </div>
           </div>
         </div>
@@ -40,15 +36,21 @@ function AttestationCard({ attestation }: { attestation: Attestation }) {
         </div>
         <p className="text-base-content text-sm sm:text-base">{attestation.description}</p>
         {attestation?.evidences?.map((url, i) => (
-          <Link
-            key={i}
-            target="_blank"
-            href={url}
-            rel="noopener noreferrer"
-            className="block text-xs sm:text-sm text-base-content/70 underline hover:text-primary"
-          >
-            {url}
-          </Link>
+          <div key={i} className="flex items-center gap-2">
+            <Link
+              target="_blank"
+              href={url}
+              rel="noopener noreferrer"
+              className="block text-xs sm:text-sm text-base-content/70 underline hover:text-primary"
+            >
+              {url}
+            </Link>
+            {attestation.evidencesVerified[i] && (
+              <div className="tooltip" data-tip="Verified">
+                <CheckCircleIcon className="mr-1 h-4 w-4 text-success" />
+              </div>
+            )}
+          </div>
         ))}
       </div>
     </div>
