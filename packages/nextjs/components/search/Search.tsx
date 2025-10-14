@@ -21,7 +21,7 @@ export const Search = () => {
   const [term, setTerm] = useState("");
   const [open, setOpen] = useState(false);
 
-  const debounced = useDebounced(term.trim(), 400);
+  const debounced = useDebounced(term.trim().replace(/^@+/, ""), 400);
 
   const { data, isFetching, isError } = useQuery({
     queryKey: ["searchDevelopers", debounced],
@@ -51,15 +51,15 @@ export const Search = () => {
     if (e.key === "Enter") {
       e.preventDefault();
       if (exactMatch) {
-        setTerm(exactMatch.githubUser);
         goToBuilder();
         setOpen(false);
+        setTerm("");
         return;
       }
       if (items.length > 0) {
-        setTerm(items[0].githubUser);
         goToBuilder(items[0].githubUser);
         setOpen(false);
+        setTerm("");
       }
     }
     if (e.key === "Escape") {
