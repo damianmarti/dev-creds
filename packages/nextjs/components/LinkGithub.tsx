@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { GithubSVG } from "../components/assets/GithubSVG";
 import { queryClient } from "./ScaffoldEthAppWithProviders";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Address } from "abitype";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { notification } from "~~/utils/scaffold-eth";
@@ -28,8 +28,40 @@ const Username = ({ username }: { username: string }) => {
   );
 };
 
+const postGithubSignin = async ({
+  address,
+  username,
+  force = false,
+}: {
+  address: Address;
+  username: string;
+  force?: boolean;
+}) => {
+  const res = await fetch("/api/github", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      address,
+      username,
+      force,
+    }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    return {
+      status: res.status,
+      data: {},
+    };
+  }
+  return {
+    status: res.status,
+    data,
+  };
+};
+
 export const LinkGithub = ({ address }: LinkGitHubProps) => {
   const { status: authStatus, data: session } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
   const [overwriteModal, setOverwriteModal] = useState<{
     existingAddress: string;
     pendingUsername: string;
@@ -46,33 +78,6 @@ export const LinkGithub = ({ address }: LinkGitHubProps) => {
     refetchOnWindowFocus: false,
   });
 
-  const link = useMutation({
-    mutationFn: async (username: string) => {
-      const response = await fetch("/api/github", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ address, username }),
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || "Linking GitHub account failed");
-      }
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["githubUsername", address] });
-      notification.success("GitHub linked");
-    },
-    onError: async (e: unknown) => {
-      const msg = e instanceof Error ? e.message : "Link failed";
-      notification.error(msg);
-      // Sign out the user to let them try again - with another github
-      await signOut();
-    },
-  });
-
   const handleConnect = async () => {
     // Ensure user is authenticated with GitHub to get username
     if (authStatus !== "authenticated") {
@@ -85,32 +90,20 @@ export const LinkGithub = ({ address }: LinkGitHubProps) => {
       await signIn("github");
       return;
     }
+    setIsLoading(true);
     const username = session?.user?.name as string | undefined;
     if (!username) {
       notification.error("GitHub username not available. Try signing in again.");
       await signOut();
       return;
     }
-
-    // Attempt to link without force first
-    const res = await fetch("/api/github", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ address, username }),
-    });
-
-    if (res.status === 409) {
-      const payload = await res.json();
-      setOverwriteModal({ existingAddress: payload.existingAddress, pendingUsername: username });
+    const { status, data } = await postGithubSignin({ address, username });
+    if (status === 409) {
+      setOverwriteModal({ existingAddress: data.existingAddress, pendingUsername: username });
+      setIsLoading(false);
       return;
     }
-
-    const dataRes = await res.json();
-    if (!res.ok) {
-      notification.error(dataRes.error || "Linking GitHub account failed");
-      await signOut();
-      return;
-    }
+    setIsLoading(false);
     queryClient.invalidateQueries({ queryKey: ["githubUsername", address] });
     notification.success("GitHub linked");
   };
@@ -118,22 +111,18 @@ export const LinkGithub = ({ address }: LinkGitHubProps) => {
   const handleForceLink = async () => {
     if (!overwriteModal) return;
     setForcing(true);
+    setIsLoading(true);
     try {
-      const resForce = await fetch("/api/github", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ address, username: overwriteModal.pendingUsername, force: true }),
+      await postGithubSignin({
+        address,
+        username: overwriteModal.pendingUsername,
+        force: true,
       });
-      const dataForce = await resForce.json();
-      if (!resForce.ok) {
-        notification.error(dataForce.error || "Linking GitHub account failed");
-        await signOut();
-        return;
-      }
       queryClient.invalidateQueries({ queryKey: ["githubUsername", address] });
       notification.success("GitHub linked");
       setOverwriteModal(null);
     } finally {
+      setIsLoading(false);
       setForcing(false);
     }
   };
@@ -141,6 +130,7 @@ export const LinkGithub = ({ address }: LinkGitHubProps) => {
   // Auto-complete linking ONLY after OAuth redirect (when user JUST authenticated, not on page refresh)
   // Use a sessionStorage flag set before redirect to GitHub to avoid auto-linking on normal loads
   const hasAttemptedAutoLink = useRef(false);
+
   useEffect(() => {
     if (hasAttemptedAutoLink.current) return;
     if (authStatus !== "authenticated") return;
@@ -176,7 +166,7 @@ export const LinkGithub = ({ address }: LinkGitHubProps) => {
 
   return (
     <>
-      <SignInButton onClick={handleConnect} disabled={link.status === "pending" || forcing} />
+      <SignInButton onClick={handleConnect} disabled={forcing || isLoading} />
       {overwriteModal && (
         <dialog open className="modal">
           <div className="modal-box">
