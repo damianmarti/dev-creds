@@ -50,7 +50,7 @@ const postGithubSignin = async ({
   if (!res.ok) {
     return {
       status: res.status,
-      data: {},
+      data,
     };
   }
   return {
