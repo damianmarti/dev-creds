@@ -14,7 +14,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const { address, username } = await req.json();
+  const { address, username, force } = await req.json();
   if (!address || !username) {
     return NextResponse.json({ error: "Missing address or username" }, { status: 400 });
   }
@@ -23,6 +23,16 @@ export async function POST(req: Request) {
   // Check if the username is already linked to another address
   const existingAddress = await redis.get(`github:byUsername:${username}`);
   if (existingAddress && existingAddress !== lowerCaseAddress) {
+    if (!force) {
+      return NextResponse.json(
+        {
+          error: "GitHub username is already linked to a different address",
+          code: "USERNAME_LINKED_TO_DIFFERENT_ADDRESS",
+          existingAddress,
+        },
+        { status: 409 },
+      );
+    }
     await redis.del(`github:byAddress:${existingAddress}`);
     await redis.del(`github:byUsername:${username}`);
   }
