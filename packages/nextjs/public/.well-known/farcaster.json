@@ -17,11 +17,11 @@
         "name": "DevCreds",
         "subtitle": "Developer Reputation On-Chain",
         "description": "DevCreds is a verifiable developer skill ledger on Arbitrum. Get peer attestations, showcase your expertise, and build trust in the Web3 ecosystem.",
+        "homeUrl": "https://devcreds.ngrok.dev",
         "iconUrl": "https://devcreds.ngrok.dev/favicon.png",
         "imageUrl": "https://devcreds.ngrok.dev/thumbnail.jpg",
         "splashImageUrl": "https://devcreds.ngrok.dev/favicon.png",
         "splashBackgroundColor": "#1E293B",
-        "homeUrl": "https://devcreds.ngrok.dev",
         "primaryCategory": "developer-tools",
         "tags": [
             "developer",
