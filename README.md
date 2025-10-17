@@ -202,8 +202,8 @@ Add your Base App Wallet Address to baseBuilder.allowedAddresses so you can acce
 
 You can debug your miniApp at:
 
-Farcaster Dev Tools: https://farcaster.xyz/~/developers/
-Base App Dev Tools: https://www.base.dev/preview
+- Farcaster Dev Tools: https://farcaster.xyz/~/developers/
+- Base App Dev Tools: https://www.base.dev/preview
 
 
 ## Documentation
