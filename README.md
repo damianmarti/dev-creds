@@ -181,7 +181,7 @@ DevCreds works as Farcaster MiniApp. Here are some things you will need to confi
 
 ```bash
 NEXT_PUBLIC_URL=https://your.live.url
-NEXT_PUBLIC_APP_AUTOADD=false - change to true if you want your miniapp to prompt user to add it to favorites on open. 
+NEXT_PUBLIC_APP_AUTOADD=false # change to true if you want your miniapp to prompt user to add it to favorites on open. 
 ```
 
 **farcaster.json** (`packages/nextjs/public/.well-known/farcaster.json`)
