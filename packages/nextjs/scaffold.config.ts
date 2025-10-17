@@ -25,7 +25,7 @@ export const PONDER_GRAPHQL_URL = process.env.NEXT_PUBLIC_PONDER_URL || "http://
 
 const scaffoldConfig = {
   // The networks on which your DApp is live
-  targetNetworks: [chains.optimismSepolia],
+  targetNetworks: [chains.arbitrum],
   // The interval at which your front-end polls the RPC servers for new data (it has no effect if you only target the local network (default is 4000))
   pollingInterval: 30000,
   // This is ours Alchemy's default API key.
@@ -61,7 +61,7 @@ const scaffoldConfig = {
     },
     [chains.arbitrum.id]: {
       contractAddress: "0xbD75f629A22Dc1ceD33dDA0b68c546A1c035c458",
-      schemaUID: "",
+      schemaUID: "0xed8c209ab79c5b66eba9a2a9806320b30513bd186712d790fd5cb7fc24eb3416",
       scan: "https://arbitrum.easscan.org",
       graphUri: "https://arbitrum.easscan.org/graphql",
     },
