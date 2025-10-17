@@ -1,0 +1,37 @@
+{
+    "comments": [
+        "This file is used to configure the Farcaster miniapp for the DevCreds project.",
+        "TODO:",
+        "Replace the accountAssociation section with your own values for production.",
+        "Replace homeUrl, iconUrl, imageUrl, splashImageUrl with your own values for production.",
+        "Add your base app wallet addresses to the allowedAddresses section to access analytics on base app",
+        "Remove this section for production."
+    ],
+    "accountAssociation": {
+        "header": "eyJmaWQiOjM2NjcxMywidHlwZSI6ImF1dGgiLCJrZXkiOiIweDhENjIzMDQyN2EzNzk4NkQyNUZlNEQ1QjNkMGFhRUYxYjkyNGZFZDYifQ",
+        "payload": "eyJkb21haW4iOiJkZXZjcmVkcy5uZ3Jvay5kZXYifQ",
+        "signature": "9wIqaZP2Q7VehTs3i4swEOKunBTdX0Iu0KrVW8oF8Ilzc9gpmmm6w8wHMXp3sFmG98gs0JKdnj/GuJrLtCw/5Rw="
+    },
+    "miniapp": {
+        "version": "1",
+        "name": "DevCreds",
+        "subtitle": "Developer Reputation On-Chain",
+        "description": "DevCreds is a verifiable developer skill ledger on Arbitrum. Get peer attestations, showcase your expertise, and build trust in the Web3 ecosystem.",
+        "iconUrl": "https://devcreds.ngrok.dev/favicon.png",
+        "imageUrl": "https://devcreds.ngrok.dev/thumbnail.jpg",
+        "splashImageUrl": "https://devcreds.ngrok.dev/favicon.png",
+        "splashBackgroundColor": "#1E293B",
+        "homeUrl": "https://devcreds.ngrok.dev",
+        "primaryCategory": "developer-tools",
+        "tags": [
+            "developer",
+            "reputation",
+            "arbitrum",
+            "attestation",
+            "skill-verification"
+        ]
+    },
+    "baseBuilder": {
+        "allowedAddresses": ["0x7980bFB7da7CFc02c016Ce2De27eBc498B0e6D75"]
+    }
+}

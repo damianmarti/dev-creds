@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
+import scaffoldConfig from "~~/scaffold.config";
 
-const baseUrl = process.env.NEXT_PUBLIC_URL
-  ? process.env.NEXT_PUBLIC_URL
-  : `http://localhost:${process.env.PORT || 3000}`;
+const baseUrl = process.env.NEXT_PUBLIC_URL ?? `http://localhost:${process.env.PORT || 3000}`;
 const titleTemplate = "%s | DevCreds";
 
 export const getMetadata = ({
@@ -22,13 +21,13 @@ export const getMetadata = ({
     version: "1",
     imageUrl: imageUrl,
     button: {
-      title: `${process.env.NEXT_PUBLIC_APP_NAME ?? title}`,
+      title: `${scaffoldConfig.miniAppConfig?.name ?? title}`,
       action: {
         url: effectiveUrl,
         type: "launch_miniapp",
-        name: `${process.env.NEXT_PUBLIC_APP_NAME ?? title}`,
-        splashImageUrl: `${process.env.NEXT_PUBLIC_APP_SPLASH_IMAGE ?? `${baseUrl}/favicon.png`}`,
-        splashBackgroundColor: `${process.env.NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR ?? "#000000"}`,
+        name: `${scaffoldConfig.miniAppConfig?.name ?? title}`,
+        splashImageUrl: `${scaffoldConfig.miniAppConfig?.splashImage ?? `${baseUrl}/favicon.png`}`,
+        splashBackgroundColor: `${scaffoldConfig.miniAppConfig?.splashBackgroundColor ?? "#000000"}`,
       },
     },
   });

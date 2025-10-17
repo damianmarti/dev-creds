@@ -1,3 +1,4 @@
+import { env } from "process";
 import * as chains from "viem/chains";
 
 type EasConfig = {
@@ -15,6 +16,7 @@ export type BaseConfig = {
   walletConnectProjectId: string;
   onlyLocalBurnerWallet: boolean;
   easConfig?: Record<chains.Chain["id"], EasConfig>;
+  miniAppConfig?: Record<string, string>;
 };
 
 export type ScaffoldConfig = BaseConfig;
@@ -65,6 +67,17 @@ const scaffoldConfig = {
       scan: "https://arbitrum.easscan.org",
       graphUri: "https://arbitrum.easscan.org/graphql",
     },
+  },
+  miniAppConfig: {
+    name: "DevCreds",
+    subtitle: "Developer Reputation On-Chain", // Max length: 30 characters
+    description:
+      "DevCreds is a verifiable developer skill ledger on Arbitrum. Get peer attestations, showcase your expertise, and build trust in the Web3 ecosystem.",
+    icon: env.NEXT_PUBLIC_URL + "/favicon.png",
+    image: env.NEXT_PUBLIC_URL + "/thumbnail.jpg",
+    splashImage: env.NEXT_PUBLIC_URL + "/favicon.png",
+    splashBackgroundColor: "#1E293B",
+    appImage: env.NEXT_PUBLIC_URL + "/thumbnail.jpg",
   },
 } as const satisfies ScaffoldConfig;
 
