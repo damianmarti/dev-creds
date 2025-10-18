@@ -14,6 +14,7 @@ export const Attest = ({ github }: { github?: string }) => {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [githubUser, setGithubUser] = useState(searchParams.get("username") || github || "");
+  const [error, setError] = useState("");
   const [skills, setSkills] = useState<string[]>([""]);
   const [description, setDescription] = useState("");
   const [evidences, setEvidences] = useState<string[]>([""]);
@@ -59,6 +60,22 @@ export const Attest = ({ github }: { github?: string }) => {
     const updatedEvidences = [...evidences];
     updatedEvidences[index] = value;
     setEvidences(updatedEvidences);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.trim();
+
+    // Reject if user pastes a full URL like "https://github.com/user"
+    if (/^https?:\/\/(www\.)?github\.com\//i.test(value)) {
+      setError("Enter only the username, not the full GitHub URL");
+      setGithubUser(value.replace(/^https?:\/\/(www\.)?github\.com\//i, ""));
+    } else if (/\s/.test(value)) {
+      setError("Username cannot contain spaces");
+      setGithubUser(value.replace(/\s+/g, ""));
+    } else {
+      setError("");
+      setGithubUser(value);
+    }
   };
 
   const isValidUrl = (value: string) => {
@@ -142,10 +159,11 @@ export const Attest = ({ github }: { github?: string }) => {
               <input
                 type="text"
                 value={githubUser}
-                onChange={e => setGithubUser(e.target.value)}
+                onChange={handleChange}
                 placeholder="Enter GitHub username"
-                className="input input-bordered w-full"
+                className={`input input-bordered w-full ${error ? "input-error" : ""}`}
               />
+              {error && <p className="text-error text-sm mt-1">{error}</p>}
             </div>
 
             {/* Skills */}
