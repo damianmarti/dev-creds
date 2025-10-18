@@ -1,20 +1,36 @@
 import type { Metadata } from "next";
+import scaffoldConfig from "~~/scaffold.config";
 
-const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  : `http://localhost:${process.env.PORT || 3000}`;
+const baseUrl = process.env.NEXT_PUBLIC_URL ?? `http://localhost:${process.env.PORT || 3000}`;
 const titleTemplate = "%s | DevCreds";
 
 export const getMetadata = ({
   title,
   description,
   imageRelativePath = "/thumbnail.jpg",
+  url,
 }: {
   title: string;
   description: string;
   imageRelativePath?: string;
+  url?: string;
 }): Metadata => {
   const imageUrl = `${baseUrl}${imageRelativePath}`;
+  const effectiveUrl = url || baseUrl;
+  const miniAppContent = JSON.stringify({
+    version: "1",
+    imageUrl: imageUrl,
+    button: {
+      title: `${scaffoldConfig.miniAppConfig?.name ?? title}`,
+      action: {
+        url: effectiveUrl,
+        type: "launch_miniapp",
+        name: `${scaffoldConfig.miniAppConfig?.name ?? title}`,
+        splashImageUrl: `${scaffoldConfig.miniAppConfig?.splashImage ?? `${baseUrl}/favicon.png`}`,
+        splashBackgroundColor: `${scaffoldConfig.miniAppConfig?.splashBackgroundColor ?? "#000000"}`,
+      },
+    },
+  });
 
   return {
     metadataBase: new URL(baseUrl),
@@ -51,6 +67,9 @@ export const getMetadata = ({
           type: "image/png",
         },
       ],
+    },
+    other: {
+      "fc:miniapp": miniAppContent,
     },
   };
 };

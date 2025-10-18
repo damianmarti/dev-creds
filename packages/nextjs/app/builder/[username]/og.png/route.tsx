@@ -84,7 +84,7 @@ async function generateProfileOgImage(username: string) {
               color: colors.neutral,
               fontFamily: "SpaceGroteskBold",
               position: "absolute",
-              bottom: "-52px",
+              top: "-58px",
               left: "0px",
               right: "0px",
               display: "flex",
