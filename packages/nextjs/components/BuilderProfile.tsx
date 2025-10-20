@@ -29,15 +29,19 @@ export function BuilderProfile({ username }: BuilderProfileProps) {
     <div className="mx-auto max-w-6xl space-y-8 p-4 sm:p-6 md:p-8">
       {isDeveloperLoading && <div>Loading...</div>}
       {isDeveloperError && <div>Error loading developer data.</div>}
-      {developer && <ProfileHeader developer={developer} />}
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <Attestations developer={developer} isLoading={isDeveloperLoading} />
-        </div>
-        <div className="lg:col-span-1">
-          <Skills username={username} />
-        </div>
-      </div>
+      {developer && (
+        <>
+          <ProfileHeader developer={developer} />
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <div className="lg:col-span-2">
+              <Attestations developer={developer} isLoading={isDeveloperLoading} />
+            </div>
+            <div className="lg:col-span-1">
+              <Skills username={username} />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
