@@ -1060,6 +1060,7 @@ const externalContracts = {
     EAS: {
       address: "0xbD75f629A22Dc1ceD33dDA0b68c546A1c035c458",
       abi: EAS_ABI,
+      deployedOnBlock: 390564122,
     },
   },
 } as const;
