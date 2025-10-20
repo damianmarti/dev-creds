@@ -175,36 +175,32 @@ Update EAS contract addresses and schema UIDs in the same file based on your tar
 
 ## MiniApp Configuration
 
-DevCreds works as Farcaster MiniApp. Here are some things you will need to configure:
+Dev Creds works as a Farcaster MiniApp. Here's what you need to configure:
 
 **NextJS** (`packages/nextjs/.env.local`):
 
 ```bash
 NEXT_PUBLIC_URL=https://your.live.url
-NEXT_PUBLIC_APP_AUTOADD=false # change to true if you want your miniapp to prompt user to add it to favorites on open. 
+NEXT_PUBLIC_APP_AUTOADD=false # Change to true if you want your MiniApp to prompt user to add it to favorites on open
 ```
 
-**farcaster.json** (`packages/nextjs/public/.well-known/farcaster.json`)
+**Farcaster Manifest** (`packages/nextjs/public/.well-known/farcaster.json`):
 
-generate "accountAssociation" values at https://farcaster.xyz/~/developers/mini-apps/manifest
+1. Generate "accountAssociation" values at https://farcaster.xyz/~/developers/mini-apps/manifest
+2. Update the following values:
+   ```json
+   "homeUrl": "https://your.live.url",
+   "iconUrl": "https://your.live.url/favicon.png",
+   "imageUrl": "https://your.live.url/thumbnail.jpg",
+   "splashImageUrl": "https://your.live.url/favicon.png"
+   ```
+3. Remove the "comments" section.
+4. Add your Base App Wallet Address to `baseBuilder.allowedAddresses` to access analytics on Base App.
 
-update following values:
-
-        "homeUrl": "https://your.live.url",
-        "iconUrl": "https://your.live.url/favicon.png",
-        "imageUrl": "https://your.live.url/thumbnail.jpg",
-        "splashImageUrl": "https://your.live.url/favicon.png",
-
-remove "comments" section
-
-Add your Base App Wallet Address to baseBuilder.allowedAddresses so you can access analytics on base app
-
-
-You can debug your miniApp at:
+You can debug your MiniApp at:
 
 - Farcaster Dev Tools: https://farcaster.xyz/~/developers/
 - Base App Dev Tools: https://www.base.dev/preview
-
 
 ## Documentation
 
