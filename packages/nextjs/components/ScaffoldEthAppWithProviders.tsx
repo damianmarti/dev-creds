@@ -11,6 +11,7 @@ import { Toaster } from "react-hot-toast";
 import { WagmiProvider } from "wagmi";
 import { Footer } from "~~/components/Footer";
 import { Header } from "~~/components/Header";
+import { MiniappProvider } from "~~/components/MiniappProvider";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
 import { useInitializeNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
@@ -61,8 +62,10 @@ export const ScaffoldEthAppWithProviders = ({
             avatar={BlockieAvatar}
             theme={mounted ? (isDarkMode ? darkTheme() : lightTheme()) : lightTheme()}
           >
-            <ProgressBar height="3px" color="#2299dd" />
-            <ScaffoldEthApp>{children}</ScaffoldEthApp>
+            <MiniappProvider>
+              <ProgressBar height="3px" color="#2299dd" />
+              <ScaffoldEthApp>{children}</ScaffoldEthApp>
+            </MiniappProvider>
           </RainbowKitProvider>
         </QueryClientProvider>
       </WagmiProvider>

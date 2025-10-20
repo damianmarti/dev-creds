@@ -173,6 +173,35 @@ const scaffoldConfig = {
 
 Update EAS contract addresses and schema UIDs in the same file based on your target network.
 
+## MiniApp Configuration
+
+Dev Creds works as a Farcaster MiniApp. Here's what you need to configure:
+
+**NextJS** (`packages/nextjs/.env.local`):
+
+```bash
+NEXT_PUBLIC_URL=https://your.live.url
+NEXT_PUBLIC_APP_AUTOADD=false # Change to true if you want your MiniApp to prompt user to add it to favorites on open
+```
+
+**Farcaster Manifest** (`packages/nextjs/public/.well-known/farcaster.json`):
+
+1. Generate "accountAssociation" values at https://farcaster.xyz/~/developers/mini-apps/manifest
+2. Update the following values:
+   ```json
+   "homeUrl": "https://your.live.url",
+   "iconUrl": "https://your.live.url/favicon.png",
+   "imageUrl": "https://your.live.url/thumbnail.jpg",
+   "splashImageUrl": "https://your.live.url/favicon.png"
+   ```
+3. Remove the "comments" section.
+4. Add your Base App Wallet Address to `baseBuilder.allowedAddresses` to access analytics on Base App.
+
+You can debug your MiniApp at:
+
+- Farcaster Dev Tools: https://farcaster.xyz/~/developers/
+- Base App Dev Tools: https://www.base.dev/preview
+
 ## Documentation
 
 Visit [Scaffold-ETH 2 docs](https://docs.scaffoldeth.io) to learn all the technical details and guides of Scaffold-ETH 2.
