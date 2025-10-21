@@ -1,26 +1,18 @@
 {
-    "comments": [
-        "This file is used to configure the Farcaster miniapp for the DevCreds project.",
-        "TODO:",
-        "Replace the accountAssociation section with your own values for production.",
-        "Replace homeUrl, iconUrl, imageUrl, splashImageUrl with your own values for production.",
-        "Add your base app wallet addresses to the allowedAddresses section to access analytics on base app",
-        "Remove this section for production."
-    ],
     "accountAssociation": {
-        "header": "eyJmaWQiOjM2NjcxMywidHlwZSI6ImF1dGgiLCJrZXkiOiIweDhENjIzMDQyN2EzNzk4NkQyNUZlNEQ1QjNkMGFhRUYxYjkyNGZFZDYifQ",
-        "payload": "eyJkb21haW4iOiJkZXZjcmVkcy5uZ3Jvay5kZXYifQ",
-        "signature": "9wIqaZP2Q7VehTs3i4swEOKunBTdX0Iu0KrVW8oF8Ilzc9gpmmm6w8wHMXp3sFmG98gs0JKdnj/GuJrLtCw/5Rw="
+        "header": "eyJmaWQiOjM2NjcxMywidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDlFOTIxODc5NEI2MDI0QjBFOTJkQjFjZkIzMDY4MDE2NzgwOTIwNDUifQ",
+        "payload": "eyJkb21haW4iOiJkZXYtY3JlZHMudmVyY2VsLmFwcCJ9",
+        "signature": "62w5f3KS3klcerqh/KqeMyrrw7JtTmZqHbrHsuMQtFMdq7NcjwFtzmggGkIsK7YxacA/QvdI6oYdVhCQy3M+nxs="
     },
     "miniapp": {
         "version": "1",
         "name": "DevCreds",
         "subtitle": "Developer Reputation On-Chain",
         "description": "DevCreds is a verifiable developer skill ledger on Arbitrum. Get peer attestations, showcase your expertise, and build trust in the Web3 ecosystem.",
-        "homeUrl": "https://devcreds.ngrok.dev",
-        "iconUrl": "https://devcreds.ngrok.dev/favicon.png",
-        "imageUrl": "https://devcreds.ngrok.dev/thumbnail.jpg",
-        "splashImageUrl": "https://devcreds.ngrok.dev/favicon.png",
+        "homeUrl": "https://dev-creds.vercel.app",
+        "iconUrl": "https://dev-creds.vercel.app/favicon.png",
+        "imageUrl": "https://dev-creds.vercel.app/thumbnail.jpg",
+        "splashImageUrl": "https://dev-creds.vercel.app/favicon.png",
         "splashBackgroundColor": "#1E293B",
         "primaryCategory": "developer-tools",
         "tags": [
