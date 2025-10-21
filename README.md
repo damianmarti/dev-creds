@@ -180,7 +180,6 @@ Dev Creds works as a Farcaster MiniApp. Here's what you need to configure:
 **NextJS** (`packages/nextjs/.env.local`):
 
 ```bash
-NEXT_PUBLIC_URL=https://your.live.url
 NEXT_PUBLIC_APP_AUTOADD=false # Change to true if you want your MiniApp to prompt user to add it to favorites on open
 ```
 

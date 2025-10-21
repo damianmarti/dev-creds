@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import scaffoldConfig from "~~/scaffold.config";
 
-const baseUrl = process.env.NEXT_PUBLIC_URL ?? `http://localhost:${process.env.PORT || 3000}`;
+const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : `http://localhost:${process.env.PORT || 3000}`;
 const titleTemplate = "%s | DevCreds";
 
 export const getMetadata = ({
@@ -16,7 +18,7 @@ export const getMetadata = ({
   url?: string;
 }): Metadata => {
   const imageUrl = `${baseUrl}${imageRelativePath}`;
-  const effectiveUrl = url || baseUrl;
+  const effectiveUrl = url ? `${baseUrl}${url}` : baseUrl;
   const miniAppContent = JSON.stringify({
     version: "1",
     imageUrl: imageUrl,
