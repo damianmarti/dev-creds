@@ -24,6 +24,10 @@ export const DEFAULT_ALCHEMY_API_KEY = "oKxs-03sij-U_N0iOlrSsZFr29-IqbuF";
 
 export const PONDER_GRAPHQL_URL = process.env.NEXT_PUBLIC_PONDER_URL || "http://localhost:42069";
 
+const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : `http://localhost:${process.env.PORT || 3000}`;
+
 const scaffoldConfig = {
   // The networks on which your DApp is live
   targetNetworks: [chains.arbitrum],
@@ -72,11 +76,11 @@ const scaffoldConfig = {
     subtitle: "Developer Reputation On-Chain", // Max length: 30 characters
     description:
       "DevCreds is a verifiable developer skill ledger on Arbitrum. Get peer attestations, showcase your expertise, and build trust in the Web3 ecosystem.",
-    icon: process.env.NEXT_PUBLIC_URL + "/favicon.png",
-    image: process.env.NEXT_PUBLIC_URL + "/thumbnail.jpg",
-    splashImage: process.env.NEXT_PUBLIC_URL + "/favicon.png",
+    icon: baseUrl + "/favicon.png",
+    image: baseUrl + "/thumbnail.jpg",
+    splashImage: baseUrl + "/favicon.png",
     splashBackgroundColor: "#1E293B",
-    appImage: process.env.NEXT_PUBLIC_URL + "/thumbnail.jpg",
+    appImage: baseUrl + "/thumbnail.jpg",
   },
 } as const satisfies ScaffoldConfig;
 
