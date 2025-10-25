@@ -67,10 +67,10 @@ export const Attest = ({ github }: { github?: string }) => {
 
     // Reject if user pastes a full URL like "https://github.com/user"
     if (/^https?:\/\/(www\.)?github\.com\//i.test(value)) {
-      setError("Enter only the username, not the full GitHub URL");
+      setError("Username extracted from the URL. Please verify it's correct");
       setGithubUser(value.replace(/^https?:\/\/(www\.)?github\.com\//i, ""));
     } else if (/\s/.test(value)) {
-      setError("Username cannot contain spaces");
+      setError("Spaces were removed automatically. Verify that the username is correct");
       setGithubUser(value.replace(/\s+/g, ""));
     } else {
       setError("");
