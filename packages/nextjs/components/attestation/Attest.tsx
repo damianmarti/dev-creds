@@ -91,7 +91,7 @@ export const Attest = ({ github }: { github?: string }) => {
   const signAttestation = async () => {
     if (githubUser && address && signer && eas && easConfig) {
       setIsLoading(true);
-
+      setError("");
       try {
         eas.connect(signer);
 
