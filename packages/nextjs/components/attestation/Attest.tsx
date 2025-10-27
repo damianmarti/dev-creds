@@ -14,6 +14,7 @@ export const Attest = ({ github }: { github?: string }) => {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [githubUser, setGithubUser] = useState(searchParams.get("username") || github || "");
+  const [error, setError] = useState("");
   const [skills, setSkills] = useState<string[]>([""]);
   const [description, setDescription] = useState("");
   const [evidences, setEvidences] = useState<string[]>([""]);
@@ -61,6 +62,22 @@ export const Attest = ({ github }: { github?: string }) => {
     setEvidences(updatedEvidences);
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.trim();
+
+    // Reject if user pastes a full URL like "https://github.com/user"
+    if (/^https?:\/\/(www\.)?github\.com\//i.test(value)) {
+      setError("Username extracted from the URL. Please verify it's correct");
+      setGithubUser(value.replace(/^https?:\/\/(www\.)?github\.com\//i, ""));
+    } else if (/\s/.test(value)) {
+      setError("Spaces were removed automatically. Verify that the username is correct");
+      setGithubUser(value.replace(/\s+/g, ""));
+    } else {
+      setError("");
+      setGithubUser(value);
+    }
+  };
+
   const isValidUrl = (value: string) => {
     if (!value.trim()) return true;
     try {
@@ -74,7 +91,7 @@ export const Attest = ({ github }: { github?: string }) => {
   const signAttestation = async () => {
     if (githubUser && address && signer && eas && easConfig) {
       setIsLoading(true);
-
+      setError("");
       try {
         eas.connect(signer);
 
@@ -142,10 +159,11 @@ export const Attest = ({ github }: { github?: string }) => {
               <input
                 type="text"
                 value={githubUser}
-                onChange={e => setGithubUser(e.target.value)}
+                onChange={handleChange}
                 placeholder="Enter GitHub username"
-                className="input input-bordered w-full"
+                className={`input input-bordered w-full ${error ? "input-error" : ""}`}
               />
+              {error && <p className="text-error text-sm mt-1">{error}</p>}
             </div>
 
             {/* Skills */}
