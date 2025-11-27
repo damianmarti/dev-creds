@@ -137,5 +137,5 @@
 }
 
 .card {
-  @apply bg-base-100 border-1 hover:border-primary/20 transition-colors shadow-sm;
+  @apply bg-base-100 border-1 hover:border-primary/20 dark:border-base-200 hover:dark:border-primary/50 transition-colors shadow-sm;
 }
