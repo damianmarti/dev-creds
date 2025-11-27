@@ -135,3 +135,7 @@
 .menu {
   @apply gap-[1px] rounded-md;
 }
+
+.card {
+  @apply bg-base-100 border-1 hover:border-primary/20 transition-colors shadow-sm;
+}

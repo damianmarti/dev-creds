@@ -38,7 +38,7 @@ function FeatureCard({
   description: string;
 }) {
   return (
-    <div className="card bg-base-100 border-2 hover:border-primary/20 transition-colors shadow">
+    <div className="card">
       <div className="card-body items-center text-center gap-3">
         <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-base-200">
           <Icon className="w-7 h-7 text-primary" aria-hidden="true" />
