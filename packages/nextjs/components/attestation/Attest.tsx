@@ -150,7 +150,7 @@ export const Attest = ({ github }: { github?: string }) => {
   return (
     <div className="relative">
       <div className="w-full px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto w-full max-w-2xl lg:max-w-3xl text-sm flex flex-col mt-6 px-6 sm:px-7 py-6 sm:py-8 bg-base-200/80 backdrop-blur-sm rounded-xl border border-base-300">
+        <div className="mx-auto w-full max-w-2xl lg:max-w-3xl text-sm flex flex-col mt-6 px-6 sm:px-7 py-6 sm:py-8 bg-base-100 backdrop-blur-sm rounded-xl border border-base-300">
           <span className="text-l sm:text-4xl">Attest Developer Skills</span>
           <div className="mt-8 space-y-6">
             {/* GitHub User */}
