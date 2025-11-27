@@ -39,7 +39,7 @@ export const ReusuableStats = ({
   return (
     <div className="card flex flex-col xs:flex-row w-full my-3">
       {stats.map((stat, index) => (
-        <div key={index} className="stat text-center">
+        <div key={index} className="stat text-center px-2!">
           <div className="stat-value text-tertiary font-serif">
             {statsLoading ? <span className="loading loading-spinner loading-sm"></span> : stat.value}
           </div>
