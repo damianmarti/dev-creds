@@ -9,7 +9,7 @@
   --animate-pulse-fast: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --font-sans: var(--font-dm-sans);
   --font-serif: var(--font-space-grotesk);
-  --breakpoint-xs: 20rem;
+  --breakpoint-xs: 24rem;
 }
 
 @plugin "daisyui" {
@@ -122,10 +122,6 @@
 
 .link:hover {
   opacity: 80%;
-}
-
-.stats {
-  @apply border-base-200 border rounded-md;
 }
 
 .stat-desc {

@@ -8,17 +8,11 @@ import { HeroSection } from "~~/components/HeroSection";
 const Home: NextPage = () => {
   return (
     <>
-      <div className="bg-background flex items-center flex-col grow 10">
+      <div className="bg-background flex items-center flex-col grow p-2 sm:p-4 md:p-6">
         <HeroSection />
         <FeaturesSection />
-        <div className="w-full bg-base-100 py-10 sm:py-12">
-          <div className="grid grid-cols-4">
-            <div className="col-span-1" />
-            <div className="col-span-2">
-              <DisplayStats />
-            </div>
-            <div className="col-span-1" />
-          </div>
+        <div className="py-2 sm:py-4 md:py-12">
+          <DisplayStats />
         </div>
       </div>
     </>

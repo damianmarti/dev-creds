@@ -37,7 +37,7 @@ export const ReusuableStats = ({
   statsLoading?: boolean;
 }) => {
   return (
-    <div className="bg-base-100 stats stats-vertical xs:stats-horizontal shadow w-full my-3">
+    <div className="card bg-base-100 border-2 hover:border-primary/20 transition-colors shadow flex flex-col xs:flex-row w-full my-3">
       {stats.map((stat, index) => (
         <div key={index} className="stat text-center">
           <div className="stat-value text-tertiary font-serif">

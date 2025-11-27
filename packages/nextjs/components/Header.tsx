@@ -74,10 +74,10 @@ export const Header = () => {
   });
 
   return (
-    <div className="sticky lg:static top-0 navbar bg-background/95 min-h-0 shrink-0 justify-between z-20 x-0 sm:px-2 border-b border-base-200">
+    <div className="sticky lg:static top-0 navbar bg-background/95 min-h-0 shrink-0 justify-between z-20 x-0 px-0 sm:px-2 border-b border-base-200">
       <div className="navbar-start w-auto lg:w-1/2">
         <details className="dropdown" ref={burgerMenuRef}>
-          <summary className="ml-1 btn btn-ghost lg:hidden hover:bg-transparent">
+          <summary className="ml-1 px-2 btn btn-ghost lg:hidden hover:bg-transparent">
             <Bars3Icon className="h-1/2" />
           </summary>
           <ul
@@ -100,8 +100,8 @@ export const Header = () => {
           <Search />
         </ul>
       </div>
-      <div className="navbar-end grow mr-4">
-        <SwitchTheme className={`mr-1 md:mr-2 pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`} />
+      <div className="navbar-end grow mr-1 sm:mr-2 md:mr-4">
+        <SwitchTheme className={`mr-2 pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`} />
         <RainbowKitCustomConnectButton />
         {isLocalNetwork && <FaucetButton />}
       </div>

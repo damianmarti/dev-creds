@@ -38,7 +38,7 @@ function FeatureCard({
   description: string;
 }) {
   return (
-    <div className="bg-base-100 card shadow-md">
+    <div className="card bg-base-100 border-2 hover:border-primary/20 transition-colors shadow">
       <div className="card-body items-center text-center gap-3">
         <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-base-200">
           <Icon className="w-7 h-7 text-primary" aria-hidden="true" />
@@ -53,7 +53,7 @@ function FeatureCard({
 export function HeroSection() {
   return (
     <section className="bg-background">
-      <div className="w-full max-w-6xl mx-auto px-4 py-12 text-center">
+      <div className="w-full max-w-6xl mx-auto px-2 sm:px-4 py-4 sm:py-8 md:py-12 text-center">
         <div className="mb-4 flex items-center justify-center gap-2 text-sm">
           <span className="badge badge-outline badge-primary">Built on Arbitrum</span>
           <span className="badge badge-outline badge-primary">On-chain attestations</span>
