@@ -86,7 +86,7 @@ export const UserAttestations = ({ githubUser }: Props) => {
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Attestations List */}
-      <div className="bg-base-200 rounded-lg p-6">
+      <div className="bg-base-200 rounded-box p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold">Attestations (Page {cursors.length + 1})</h2>
 

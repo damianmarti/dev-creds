@@ -17,8 +17,8 @@ export default async function BuilderPage({ params }: { params: Promise<{ userna
   const { username } = await params;
 
   return (
-    <div className="min-h-screen bg-background">
-      <main className="container mx-auto px-4 py-8">
+    <div className="min-h-screen">
+      <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
         <BuilderProfile username={username} />
       </main>
     </div>

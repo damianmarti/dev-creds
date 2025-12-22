@@ -24,7 +24,7 @@ function TableHeader() {
 
 function DeveloperRow({ developer }: { developer: DeveloperResult }) {
   return (
-    <div className="w-full p-4 transition-colors hover:bg-base-200/50 md:grid md:grid-cols-10 md:items-center md:gap-4 rounded-xl border border-base-200 md:rounded-none md:border-0">
+    <div className="w-full p-4 transition-colors hover:bg-base-200/50 md:grid md:grid-cols-10 md:items-center md:gap-4">
       <div className="flex items-center gap-3 md:col-span-3">
         <div className="avatar">
           <div className="mask mask-squircle h-10 w-10 bg-base-200">

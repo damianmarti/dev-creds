@@ -5,12 +5,11 @@ import { List } from "~~/components/attestation/List";
 
 const Home: NextPage = () => {
   return (
-    <>
-      <div className="flex items-center flex-col grow py-10">
-        <h1 className="text-center text-md md:text-4xl font-bold">Attestations</h1>
-        <List />
-      </div>
-    </>
+    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
+      <h1 className="mb-2 font-serif text-4xl font-bold text-base-content">Attestations</h1>
+      <p className="text-base-content/70">List of all attestations</p>
+      <List />
+    </div>
   );
 };
 

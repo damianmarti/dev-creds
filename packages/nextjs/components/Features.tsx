@@ -31,7 +31,7 @@ const featureItems: FeatureItem[] = [
 
 function Feature({ featureItem }: { featureItem: FeatureItem }) {
   return (
-    <div className="card bg-base-100 border-2 hover:border-primary/20 transition-colors shadow">
+    <div className="card">
       <div className="card-body">
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
@@ -49,7 +49,7 @@ function Feature({ featureItem }: { featureItem: FeatureItem }) {
 export function FeaturesSection() {
   return (
     <section className="py-10">
-      <div className="container mx-auto max-w-6xl">
+      <div className="container mx-auto max-w-6xl px-2 sm:px-4">
         <div className="text-center space-y-4 mb-16">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-foreground">Why DevCreds?</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">

@@ -37,137 +37,162 @@ export const List = () => {
     }
   };
 
+  const HeaderBar = () => (
+    <div className="hidden min-w-max grid-cols-8 gap-4 bg-base-200 p-4 text-sm font-medium text-base-content/70 md:grid md:min-w-0">
+      <div className="col-span-2">Attester</div>
+      <div className="col-span-2">GitHub User</div>
+      <div className="col-span-2">Skills</div>
+      <div className="col-span-1">Attested at</div>
+      <div className="col-span-1 text-right">Link</div>
+    </div>
+  );
+
   return (
-    <div className="list__container flex flex-col justify-center items-center py-2 px-5 sm:px-0 lg:py-auto max-w-[100vw] ">
-      <div className="flex justify-center py-10 px-5 sm:px-0">
-        <div className="w-full max-w-6xl">
-          <div className="rounded-2xl shadow-xl overflow-hidden border border-base-300 bg-base-100">
-            <div className="overflow-x-auto">
-              <table className="table table-zebra w-full">
-                <thead className="bg-primary text-white">
-                  <tr>
-                    <th className="p-3 sml:p-4">Attester</th>
-                    <th className="p-3 sml:p-4">GitHub User</th>
-                    <th className="p-3 sml:p-4">Skills</th>
-                    <th className="p-3 sml:p-4">Attested at</th>
-                    <th className="p-3 pr-10 sml:p-4 text-right">Link</th>
-                  </tr>
-                </thead>
+    <div className="w-full mt-12 mb-12">
+      <div className="card border border-base-300 bg-base-100 shadow-xl overflow-x-auto">
+        <HeaderBar />
 
-                {isLoading ? (
-                  <tbody>
-                    {Array.from({ length: 10 }).map((_, rowIndex) => (
-                      <tr key={rowIndex} className="hover h-12">
-                        {Array.from({ length: 5 }).map((_, colIndex) => (
-                          <td key={colIndex} className="p-3 sml:p-4">
-                            <div className="h-3 rounded-full bg-base-200 animate-pulse" />
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                ) : (
-                  <tbody>
-                    {attestationsData?.attestations.items.map(attestation => (
-                      <tr key={attestation.id} className="hover text-sm">
-                        <td className="p-3 sml:p-4">
-                          <Address address={attestation.attester} size="sm" />
-                        </td>
-
-                        <td className="p-3 sml:p-4">
-                          <div className="flex flex-col gap-1">
-                            <a
-                              href={`https://github.com/${attestation.githubUser}`}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-primary font-medium hover:underline"
-                            >
-                              @{attestation.githubUser}
-                            </a>
-                            <a
-                              href={`/attestations/${attestation.githubUser}`}
-                              className="text-xs text-secondary hover:underline"
-                            >
-                              View all attestations
-                            </a>
-                          </div>
-                        </td>
-
-                        <td className="p-3 sml:p-4">
-                          <div className="flex flex-wrap gap-1">
-                            {attestation.skills.map((skill: string, i: number) => (
-                              <span key={i} className="badge badge-primary badge-sm rounded-md">
-                                {skill.trim()}
-                              </span>
-                            ))}
-                          </div>
-                        </td>
-
-                        <td className="p-3 sml:p-4">
-                          <time
-                            dateTime={new Date(attestation.timestamp * 1000).toISOString()}
-                            title={new Date(attestation.timestamp * 1000).toLocaleString()}
-                            className="text-sm"
-                          >
-                            {new Date(attestation.timestamp * 1000).toLocaleDateString()}{" "}
-                            <span className="text-xs opacity-70">
-                              {new Date(attestation.timestamp * 1000).toLocaleTimeString()}
-                            </span>
-                          </time>
-                        </td>
-
-                        {/* New Link column with verify arrow */}
-                        <td className="p-3 sml:p-4 text-right">
-                          <a
-                            href={`${easConfig?.scan}/attestation/view/${attestation.uid}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="btn btn-sm btn-ghost gap-1 rounded-full"
-                            aria-label="Verify on explorer"
-                            title={attestation.uid}
-                          >
-                            <span className="hidden sm:inline">Verify</span>
-                            <ArrowTopRightOnSquareIcon className="h-4 w-4" />
-                          </a>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                )}
-              </table>
-            </div>
-
-            {attestationsData && (
-              <div className="flex justify-between items-center px-4 py-3 bg-base-100 border-t border-base-300">
-                <span className="text-sm opacity-80">Page {cursors.length + 1}</span>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={goPrevious}
-                    disabled={cursors.length === 0}
-                    className="btn btn-outline btn-sm rounded-full"
-                  >
-                    <ChevronLeftIcon className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={goNext}
-                    disabled={!attestationsData.attestations.pageInfo.hasNextPage}
-                    className="btn btn-outline btn-sm rounded-full"
-                  >
-                    <ChevronRightIcon className="h-4 w-4" />
-                  </button>
+        <div className="divide-y divide-base-200 md:divide-y">
+          {isLoading &&
+            Array.from({ length: 10 }).map((_, rowIndex) => (
+              <div
+                key={rowIndex}
+                className="w-full p-4 md:grid md:grid-cols-8 md:items-center md:gap-4 transition-colors"
+              >
+                <div className="md:col-span-2">
+                  <div className="h-4 w-40 rounded bg-base-200 animate-pulse" />
+                </div>
+                <div className="mt-3 md:mt-0 md:col-span-2">
+                  <div className="h-4 w-48 rounded bg-base-200 animate-pulse" />
+                </div>
+                <div className="mt-3 md:mt-0 md:col-span-2">
+                  <div className="h-4 w-56 rounded bg-base-200 animate-pulse" />
+                </div>
+                <div className="mt-3 md:mt-0 md:col-span-1">
+                  <div className="h-4 w-32 rounded bg-base-200 animate-pulse" />
+                </div>
+                <div className="mt-3 md:mt-0 md:col-span-1 flex justify-end">
+                  <div className="h-8 w-20 rounded-full bg-base-200 animate-pulse" />
                 </div>
               </div>
-            )}
-          </div>
-          {/* Empty state */}
-          {!isLoading && !attestationsData?.attestations.items?.length && (
-            <div className="mt-6 flex flex-col items-center gap-2 text-center">
-              <div className="text-lg font-medium">No attestations yet</div>
-              <div className="text-sm opacity-70">They’ll show up here as soon as you have some.</div>
-            </div>
-          )}
+            ))}
+
+          {!isLoading &&
+            attestationsData?.attestations.items.map(attestation => (
+              <div
+                key={attestation.id}
+                className="w-full p-4 transition-colors hover:bg-base-200/50 md:grid md:grid-cols-8 md:items-center md:gap-4"
+              >
+                <div className="md:col-span-2 grid grid-cols-3 md:flex">
+                  <div className="md:hidden col-span-1 text-sm opacity-80">Attester:</div>
+                  <div className="col-span-2">
+                    <Address address={attestation.attester} size="sm" />
+                  </div>
+                </div>
+
+                <div className="mt-3 md:mt-0 md:col-span-2">
+                  <div className="grid grid-cols-3 md:flex">
+                    <div className="md:hidden col-span-1 text-sm opacity-80">GitHub User:</div>
+                    <div className="col-span-2 flex flex-col">
+                      <a
+                        href={`https://github.com/${attestation.githubUser}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="link link-hover text-base-content text-sm font-medium sm:text-base"
+                      >
+                        @{attestation.githubUser}
+                      </a>
+                      <a
+                        href={`/attestations/${attestation.githubUser}`}
+                        className="text-xs text-primary hover:underline"
+                      >
+                        (view all)
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-3 md:mt-0 md:col-span-2">
+                  <div className="grid grid-cols-3 md:flex">
+                    <div className="md:hidden col-span-1 text-sm opacity-80">Skills:</div>
+                    <div className="col-span-2 flex flex-col">
+                      <div className="flex flex-wrap gap-1">
+                        {attestation.skills.map((skill: string, i: number) => (
+                          <span key={i} className="badge badge-secondary badge-sm">
+                            {skill.trim()}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-3 md:mt-0 md:col-span-1">
+                  <div className="grid grid-cols-3 md:flex">
+                    <div className="md:hidden col-span-1 text-sm opacity-80">Attested at:</div>
+                    <div className="col-span-2">
+                      <time
+                        dateTime={new Date(attestation.timestamp * 1000).toISOString()}
+                        title={new Date(attestation.timestamp * 1000).toLocaleString()}
+                        className="text-sm"
+                      >
+                        {new Date(attestation.timestamp * 1000).toLocaleDateString()}{" "}
+                        <span className="text-xs opacity-70">
+                          {new Date(attestation.timestamp * 1000).toLocaleTimeString()}
+                        </span>
+                      </time>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-3 md:mt-0 md:col-span-1 flex justify-end">
+                  <a
+                    href={`${easConfig?.scan}/attestation/view/${attestation.uid}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn-outline btn-sm flex items-center gap-1"
+                    aria-label="Verify on explorer"
+                    title={attestation.uid}
+                  >
+                    Verify
+                    <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+                  </a>
+                </div>
+              </div>
+            ))}
         </div>
+
+        {attestationsData && (
+          <div className="flex items-center justify-between p-4">
+            <div className="text-sm opacity-70">Page {cursors.length + 1}</div>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={goPrevious}
+                disabled={cursors.length === 0}
+                className="btn btn-outline btn-sm flex items-center gap-1"
+              >
+                <ChevronLeftIcon className="h-5 w-5" />
+                Prev
+              </button>
+              <button
+                onClick={goNext}
+                disabled={!attestationsData.attestations.pageInfo.hasNextPage}
+                className="btn btn-outline btn-sm flex items-center gap-1"
+              >
+                Next
+                <ChevronRightIcon className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
+
+      {!isLoading && !attestationsData?.attestations.items?.length && (
+        <div className="mt-6 flex flex-col items-center gap-2 text-center">
+          <div className="text-lg font-medium">No attestations yet</div>
+          <div className="text-sm opacity-70">They’ll show up here as soon as you have some.</div>
+        </div>
+      )}
     </div>
   );
 };

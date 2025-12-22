@@ -26,7 +26,7 @@ export function BuilderProfile({ username }: BuilderProfileProps) {
   const developer = useMemo(() => developerData as Developer, [developerData]);
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8 p-4 sm:p-6 md:p-8">
+    <div className="mx-auto max-w-6xl space-y-8 px-0">
       {isDeveloperLoading && (
         <div className="flex min-h-[50vh] items-center justify-center">
           <div className="text-center">
