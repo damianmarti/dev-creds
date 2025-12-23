@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { GithubSVG } from "../components/assets/GithubSVG";
 import { queryClient } from "./ScaffoldEthAppWithProviders";
 import { useQuery } from "@tanstack/react-query";
@@ -60,6 +61,7 @@ const postGithubSignin = async ({
 };
 
 export const LinkGithub = ({ address }: LinkGitHubProps) => {
+  const router = useRouter();
   const { status: authStatus, data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const [overwriteModal, setOverwriteModal] = useState<{
@@ -105,7 +107,7 @@ export const LinkGithub = ({ address }: LinkGitHubProps) => {
     }
     setIsLoading(false);
     queryClient.invalidateQueries({ queryKey: ["githubUsername", address] });
-    notification.success("GitHub linked");
+    router.push("/peers?linked=true");
   };
 
   const handleForceLink = async () => {
@@ -119,8 +121,8 @@ export const LinkGithub = ({ address }: LinkGitHubProps) => {
         force: true,
       });
       queryClient.invalidateQueries({ queryKey: ["githubUsername", address] });
-      notification.success("GitHub linked");
       setOverwriteModal(null);
+      router.push("/peers?linked=true");
     } finally {
       setIsLoading(false);
       setForcing(false);

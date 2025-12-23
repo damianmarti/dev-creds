@@ -5,7 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SwitchTheme } from "./SwitchTheme";
 import { Search } from "./search/Search";
+import { useQuery } from "@tanstack/react-query";
 import { hardhat } from "viem/chains";
+import { useAccount } from "wagmi";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick, useTargetNetwork } from "~~/hooks/scaffold-eth";
@@ -16,7 +18,7 @@ type HeaderMenuLink = {
   icon?: React.ReactNode;
 };
 
-export const menuLinks: HeaderMenuLink[] = [
+const baseMenuLinks: HeaderMenuLink[] = [
   {
     label: "Home",
     href: "/",
@@ -35,8 +37,31 @@ export const menuLinks: HeaderMenuLink[] = [
   },
 ];
 
+const peersLink: HeaderMenuLink = {
+  label: "My Peers",
+  href: "/peers",
+};
+
 export const HeaderMenuLinks = () => {
   const pathname = usePathname();
+  const { address, isConnected } = useAccount();
+
+  // Check if GitHub username is linked
+  const { data: githubData } = useQuery<{ username: string }>({
+    queryKey: ["githubUsername", address],
+    queryFn: async () => {
+      if (!address) return null;
+      const res = await fetch(`/api/github?address=${address}`);
+      if (!res.ok) return null;
+      return res.json();
+    },
+    enabled: isConnected && !!address,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+
+  // Include Peers link only if GitHub username is linked
+  const menuLinks = githubData?.username ? [...baseMenuLinks, peersLink] : baseMenuLinks;
 
   return (
     <>
