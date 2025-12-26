@@ -6,7 +6,7 @@ import { EAS_ABI } from "../../nextjs/contracts/externalContracts";
 import { createClient } from "redis";
 import { eq } from "ponder";
 
-const redis = await createClient({ url: process.env.REDIS_URL }).connect();
+const redis = await createClient({ url: process.env.REDIS_URL, pingInterval: 3000 }).connect();
 
 const targetNetwork = scaffoldConfig.targetNetworks[0];
 const easConfig = scaffoldConfig.easConfig[targetNetwork.id];
