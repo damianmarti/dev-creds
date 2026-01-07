@@ -20,7 +20,7 @@ export function ProfileHeader({ developer }: { developer: Developer }) {
   const shareUrl = new URL(
     process.env.VERCEL_PROJECT_PRODUCTION_URL ?? "https://dev-creds.vercel.app" + `/builder/${developer.githubUser}`,
   ).toString();
-  const shareText = `Check out ${developer.name}'s DevCreds profile:`;
+  const shareText = `Check out the DevCreds profile of ${developer.name || developer.githubUser}:`;
   const xShareUrl = new URL(
     "https://x.com/intent/tweet?text=" +
       encodeURIComponent(shareText).toString() +
