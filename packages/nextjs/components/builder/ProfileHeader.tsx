@@ -1,7 +1,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ReusuableStats } from "../DisplayStats";
+import { FarcasterSVG } from "../assets/FarcasterSVG";
 import { GithubSVG } from "../assets/GithubSVG";
+import { XSVG } from "../assets/XSVG";
 import { Attest } from "../attestation/Attest";
 import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
 import { Developer } from "~~/types";
@@ -15,6 +17,21 @@ export function ProfileHeader({ developer }: { developer: Developer }) {
     { label: "Attestations", value: developer.attestationsCount },
     { label: "Verified Attestations", value: developer.verifiedAttestationsCount },
   ];
+  const shareUrl = new URL(
+    process.env.VERCEL_PROJECT_PRODUCTION_URL ?? "https://dev-creds.vercel.app" + `/builder/${developer.githubUser}`,
+  ).toString();
+  const shareText = `Check out the DevCreds profile of ${developer.name || developer.githubUser}:`;
+  const xShareUrl = new URL(
+    "https://x.com/intent/tweet?text=" +
+      encodeURIComponent(shareText).toString() +
+      "&url=" +
+      encodeURIComponent(shareUrl),
+  ).toString();
+  const farcasterShareUrl =
+    new URL("https://farcaster.xyz/~/compose?text=" + encodeURIComponent(shareText)).toString() +
+    "&embeds[]=" +
+    encodeURIComponent(shareUrl);
+
   return (
     <div className="card border border-base-300 bg-base-100 shadow-xl">
       <div className="card-body p-6 sm:p-8">
@@ -26,7 +43,7 @@ export function ProfileHeader({ developer }: { developer: Developer }) {
                 <img src={avatarUrl} alt={developer.githubUser} />
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 my-0">
               <Link
                 href={githubUrl}
                 target="_blank"
@@ -43,6 +60,24 @@ export function ProfileHeader({ developer }: { developer: Developer }) {
               >
                 <ChatBubbleLeftRightIcon className="h-4 w-4" />
                 <span>Attest</span>
+              </button>
+            </div>
+            <div className="flex gap-2 -mt-2">
+              <button
+                className="btn btn-secondary btn-xs border-black bg-black text-white hover:bg-gray-600 hover:border-gray-600 focus:bg-gray-600 dark:hover:bg-gray-900 dark:hover:border-gray-900 dark:focus:bg-gray-900 flex items-center gap-2"
+                onClick={() => window.open(xShareUrl, "_blank")}
+                aria-label={`Share on X`}
+              >
+                <XSVG />
+                <span>Share</span>
+              </button>
+              <button
+                className="btn btn-secondary btn-xs border-[#7959ff] bg-[#7959ff] text-white hover:bg-[#5d42d6] hover:border-[#5d42d6] focus:bg-[#5d42d6] flex items-center gap-2"
+                onClick={() => window.open(farcasterShareUrl, "_blank")}
+                aria-label={`Share on Farcaster`}
+              >
+                <FarcasterSVG />
+                <span>Cast</span>
               </button>
             </div>
           </div>
